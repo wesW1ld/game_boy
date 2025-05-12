@@ -27,7 +27,7 @@ class CPU
         void LD_mem_n16_A(uint16_t dest);                             // LD [n16], A
         void LDH_mem_n16_A(uint16_t dest);                            // LDH [n16], A
         void LDH_mem_C_A();                                           // LDH [C], A
-        void LD_A_mem_r16(uint16_t& src);                             // LD A, [r16]
+        void LD_A_mem_r16(int dest);                             // LD A, [r16]
         void LD_A_mem_n16(uint16_t src);                              // LD A, [n16]
         void LDH_A_mem_n16(uint8_t src);                              // LDH A, [n16]
         void LDH_A_mem_C();                                           // LDH A, [C]
