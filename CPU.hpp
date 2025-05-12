@@ -2,6 +2,8 @@
 #define CPU_HPP
 
 #include <cstdint>
+#include <array>
+#include <string>
 
 class CPU
 {
@@ -9,7 +11,6 @@ class CPU
         uint8_t registers[8];
         uint16_t PC; // Program Counter
         uint16_t SP; // Stack Pointer
-        const char RegName[8][6];
 
         CPU(Memory& mem);
 
@@ -22,7 +23,7 @@ class CPU
         void LD_memHL_r8(int src);                                    // LD [HL], r8
         void LD_memHL_n8(uint8_t value);                              // LD [HL], n8
         void LD_r8_memHL(int dest);                                   // LD r8, [HL]
-        void LD_mem_r16_A(uint16_t& dest);                            // LD [r16], A
+        void LD_mem_r16_A(int dest);                                  // LD [r16], A
         void LD_mem_n16_A(uint16_t dest);                             // LD [n16], A
         void LDH_mem_n16_A(uint16_t dest);                            // LDH [n16], A
         void LDH_mem_C_A();                                           // LDH [C], A

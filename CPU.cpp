@@ -2,15 +2,14 @@
 #include "MEMORY.hpp"
 #include <iostream>
 
-CPU::CPU(Memory& mem):memory(mem), RegName{
-     "$A", "$F", "$B", "$C", "$D", "$E","$H", "$L", 
-}
+CPU::CPU(Memory& mem):memory(mem)
 // for f:
 //bit name explanation
 // 7	z	Zero flag
 // 6	n	Subtraction flag (BCD)
 // 5	h	Half Carry flag (BCD)
 // 4	c	Carry flag
+//"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L"
 {
     // Initialize registers and program counter
     for (int i = 0; i < 8; ++i)
@@ -60,9 +59,9 @@ void CPU::LD_r8_memHL(int dest)
 {
     registers[dest] = memory.read(getPair(6));
 }
-void CPU::LD_mem_r16_A(uint16_t& dest)
+void CPU::LD_mem_r16_A(int dest)
 {
-    
+    memory.write(getPair(dest), registers[1])
 }
 void CPU::LD_mem_n16_A(uint16_t dest);
 void CPU::LDH_mem_n16_A(uint16_t dest);
@@ -76,7 +75,7 @@ void CPU::LD_mem_HLD_A();
 void CPU::LD_A_mem_HLI();
 void CPU::LD_A_mem_HLD();
 
-uint16_t CPU::getPair(int firstAdress) //TODO: add check to make sure pair is valid
+uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
     if(firstAdress % 2 == 0)
     {
