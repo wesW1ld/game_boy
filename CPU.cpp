@@ -1,9 +1,10 @@
 #include "CPU.hpp"
+#include "MEMORY.hpp"
 #include <iostream>
 
-CPU::CPU():RegName{
+CPU::CPU(Memory& mem):memory(mem), RegName{
      "$A", "$F", "$B", "$C", "$D", "$E","$H", "$L", 
-} // Initialize RegName with 16 elements
+}
 // for f:
 //bit name explanation
 // 7	z	Zero flag
@@ -49,17 +50,20 @@ void CPU::LD_r16_n16(int dest, uint16_t val)
 }
 void CPU::LD_memHL_r8(int src)
 {
-
+    memory.write(getPair(6), registers[src]);
 }
 void CPU::LD_memHL_n8(uint8_t value)
 {
-
+    memory.write(getPair(6), value);
 }
 void CPU::LD_r8_memHL(int dest)
 {
-
+    registers[dest] = memory.read(getPair(6));
 }
-void CPU::LD_mem_r16_A(uint16_t& dest);
+void CPU::LD_mem_r16_A(uint16_t& dest)
+{
+    
+}
 void CPU::LD_mem_n16_A(uint16_t dest);
 void CPU::LDH_mem_n16_A(uint16_t dest);
 void CPU::LDH_mem_C_A();

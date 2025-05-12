@@ -11,9 +11,7 @@ class CPU
         uint16_t SP; // Stack Pointer
         const char RegName[8][6];
 
-        uint16_t* memory; //pointer to memory which is stored outside of the CPU
-
-        CPU();
+        CPU(Memory& mem);
 
         void start();
 
@@ -39,6 +37,7 @@ class CPU
 
     private:
     uint16_t getPair(int firstAdress);
+    Memory& memory;
 };
 
 #endif
