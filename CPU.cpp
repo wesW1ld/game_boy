@@ -83,7 +83,7 @@ void CPU::LD_A_mem_r16(int dest)
 {
     registers[0] = memory.read(getPair(dest));
 }
-void CPU::LD_A_mem_n16(uint16_t src)
+void CPU::LD_A_mem_n16(uint16_t src) //fix
 {
     registers[0] = memory.read(src);
 }
