@@ -84,7 +84,7 @@ void CPU::LD_A_mem_r16(int dest)
 {
     registers[0] = memory.read(getPair(dest));
 }
-void CPU::LD_A_mem_n16(uint16_t src) //fix
+void CPU::LD_A_mem_n16(uint16_t src)
 {
     registers[0] = memory.read(src);
 }
@@ -155,9 +155,12 @@ void CPU::LD_A_mem_HLD()
 //8-bit arithmetic instructions
 void CPU::ADC_r(int src)
 {
+    CPU::ADC_n(registers[src]);
+}
+void CPU::ADC_n(int value)
+{
     uint8_t initial = registers[0];
-    uint8_t regv = registers[src];
-    registers[0] += regv + (registers[1] >> 4);
+    registers[0] += value + ((registers[1] >> 4)& 0b1);
     if(registers[0] == 0)
     {
         registers[1] = 0b1000;  //zero bit
@@ -171,10 +174,51 @@ void CPU::ADC_r(int src)
         registers[1] += 0b0001; //carry bit
     }
     //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
-    if(((((initial >> 4) & 0b1) + ((regv >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
     {
         registers[1] += 0b0010; //half carry bit
     }
+
+    registers[1] = registers[1] << 4; //shift flags into place
+}
+void CPU::ADC()
+{
+    CPU::ADC_n(memory.read(getPair(6)));
+}
+
+void CPU::ADD_r(int src)
+{
+    CPU::ADD_n(registers[src]);
+}
+
+void CPU::ADD_n(int value)
+{
+    uint8_t initial = registers[0];
+    registers[0] += value;
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1000;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0;  //zero bit
+    }
+    if(initial > registers[0])
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
+}
+
+void CPU::ADD()
+{
+    CPU::ADD_n(memory.read(getPair(6)));
 }
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error

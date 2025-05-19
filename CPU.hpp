@@ -39,6 +39,11 @@ class CPU
 
         //8-bit arithmetic instructions
         void ADC_r(int src);                                          // ADC A, r8
+        void ADC_n(int value);                                        // ADC A, n8
+        void ADC();                                                   // ADC A, [HL]
+        void ADD_r(int src);                                          // ADD A, r8
+        void ADD_n(int value);                                        // ADD A, n8
+        void ADD();                                                   // ADD A, [HL]
 
     private:
     uint16_t getPair(int firstAdress);
