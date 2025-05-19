@@ -28,7 +28,7 @@ class CPU
         void LD_mem_n16_A(uint16_t dest);                             // LD [n16], A
         void LDH_mem_n16_A(uint16_t dest);                            // LDH [n16], A
         void LDH_mem_C_A();                                           // LDH [C], A
-        void LD_A_mem_r16(int dest);                             // LD A, [r16]
+        void LD_A_mem_r16(int dest);                                  // LD A, [r16]
         void LD_A_mem_n16(uint16_t src);                              // LD A, [n16]
         void LDH_A_mem_n16(uint8_t src);                              // LDH A, [n16]
         void LDH_A_mem_C();                                           // LDH A, [C]
@@ -36,6 +36,9 @@ class CPU
         void LD_mem_HLD_A();                                          // LD [HLD], A (post-decrement)
         void LD_A_mem_HLI();                                          // LD A, [HLI]
         void LD_A_mem_HLD();                                          // LD A, [HLD]
+
+        //8-bit arithmetic instructions
+        void ADC_r(int src);                                          // ADC A, r8
 
     private:
     uint16_t getPair(int firstAdress);

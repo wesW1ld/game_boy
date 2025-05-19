@@ -9,6 +9,7 @@ CPU::CPU(Memory& mem):memory(mem)
 // 6	n	Subtraction flag (BCD)
 // 5	h	Half Carry flag (BCD)
 // 4	c	Carry flag
+// 0-3      Unused(0)
 //"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L"
 // 0     1     2     3     4     5     6     7
 {
@@ -148,6 +149,31 @@ void CPU::LD_A_mem_HLD()
     else
     {
         registers[7] -= 1;
+    }
+}
+
+//8-bit arithmetic instructions
+void CPU::ADC_r(int src)
+{
+    uint8_t initial = registers[0];
+    uint8_t regv = registers[src];
+    registers[0] += regv + (registers[1] >> 4);
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1000;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0;  //zero bit
+    }
+    if(initial > registers[0])
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    if(((((initial >> 4) & 0b1) + ((regv >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    {
+        registers[1] += 0b0010; //half carry bit
     }
 }
 
