@@ -185,12 +185,10 @@ void CPU::ADC()
 {
     CPU::ADC_n(memory.read(getPair(6)));
 }
-
 void CPU::ADD_r(int src)
 {
     CPU::ADD_n(registers[src]);
 }
-
 void CPU::ADD_n(int value)
 {
     uint8_t initial = registers[0];
@@ -215,10 +213,145 @@ void CPU::ADD_n(int value)
 
     registers[1] = registers[1] << 4; //shift flags into place
 }
-
 void CPU::ADD()
 {
     CPU::ADD_n(memory.read(getPair(6)));
+}
+void CPU::CP_r(int src)
+{
+    CPU::CP_n(registers[src]);
+}
+void CPU::CP_n(int value) //add a value ahead to carry from on A, still a problem if value > initial
+{
+    uint8_t initial = registers[0];
+    uint8_t subd = initial - value;
+
+    if(subd == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    //if((((((initial >> 4) & 0b1)+0b10) - (((value >> 4) & 0b1)+0b10))& 0b1) != ((subd >> 4) & 0b1))
+    if ((initial & 0x0F) < (value & 0x0F)) //better
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    if(initial < value)
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
+}
+void CPU::CP()
+{
+    CPU::CP_n(memory.read(getPair(6)));
+}
+void CPU::DEC_r(int src)
+{
+    uint8_t initial = registers[src];
+    registers[src] -= 1;
+
+    registers[1] = registers[1] & 0x10; //keep current carry flag
+    registers[1] |= 0x40; //subtraction flag
+
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80; //zero flag
+    }
+
+    if((initial & 0x0F) == 0)
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
+}
+void CPU::DEC()
+{
+    uint8_t initial = memory.read(getPair(6));
+    memory.write(getPair(6), initial - 1);
+
+    registers[1] = registers[1] & 0x10; //keep current carry flag
+    registers[1] |= 0x40; //subtraction flag
+
+    if(initial - 1 == 0)
+    {
+        registers[1] |= 0x80; //zero flag
+    }
+
+    if((initial & 0x0F) == 0)
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
+}
+void CPU::INC_r(int src)
+{
+    uint8_t initial = registers[src];
+    registers[src] += 1;
+
+    registers[1] = registers[1] & 0x10; //keep current carry flag
+
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80; //zero flag
+    }
+
+    if((initial & 0x0F) == 0x0F)
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
+}
+void CPU::INC()
+{
+    uint8_t initial = memory.read(getPair(6));
+    memory.write(getPair(6), initial + 1);
+
+    registers[1] = registers[1] & 0x10; //keep current carry flag
+
+    if(initial + 1 == 0)
+    {
+        registers[1] |= 0x80; //zero flag
+    }
+
+    if((initial & 0x0F) == 0x0F)
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
+}
+void CPU::SBC_r(int src)
+{
+
+}
+void CPU::SBC_n(int value)
+{
+    //Subtract the value in r8 and the carry flag from A.
+    uint8_t initial = registers[0];
+    registers[0] -= (value + ((registers[1] >> 4)& 0b1));
+
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+    if(initial > value + ((registers[1] >> 4)& 0b1)) //(r8 + carry) > A
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+        // if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+        // {
+        //     registers[1] += 0b0010; //half carry bit
+        // }
+
+    registers[1] = registers[1] << 4; //shift flags into place
 }
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error

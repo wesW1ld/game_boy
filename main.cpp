@@ -11,7 +11,7 @@ int main()
 
     int option = 0;
 
-    while(option != 2)
+    while(option != 9)
     {
         std::cout << "Pick an option";
         std::cin >> option;
@@ -32,8 +32,36 @@ int main()
                 std::cout << (int)cpu.registers[1] << std::endl; //print flags
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
                 break;
+            case 2:
+                cpu.registers[0] = 0x10; //set A
+                cpu.CP_n(0x00); //A - value
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
+                cpu.registers[0] = 0x10; //set A
+                cpu.CP_n(0x08); //A - value
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
+                cpu.registers[0] = 0x10; //set A
+                cpu.CP_n(0x20); //A - value
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
+                cpu.registers[0] = 0x10; //set A
+                cpu.CP_n(0x28); //A - value
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
+                break;
+            case 3:
+                cpu.LD_memHL_n8(0x10);
+                std::cout << (int)memory.read(0) << std::endl; //print mem
+                cpu.DEC();
+                std::cout << (int)memory.read(0) << std::endl; //print mem
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
+                cpu.DEC();
+                std::cout << (int)memory.read(0) << std::endl; //print mem
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
+                break;
             default:
-                option = 2;
+                uint8_t a = 0b00001000;
+                uint8_t b = 0b00100100;
+                uint8_t c = a - b;
+                std::cout << std::bitset<8>(c) << std::endl;
+                option = 9;
                 break;
         }
 
