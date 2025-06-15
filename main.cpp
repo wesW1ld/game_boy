@@ -34,16 +34,20 @@ int main()
                 break;
             case 2:
                 cpu.registers[0] = 0x10; //set A
-                cpu.CP_n(0x00); //A - value
+                cpu.registers[1] = 0;
+                cpu.SBC_n(0x00); //A - value
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
                 cpu.registers[0] = 0x10; //set A
-                cpu.CP_n(0x08); //A - value
+                cpu.registers[1] = 0;
+                cpu.SBC_n(0x08); //A - value
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
                 cpu.registers[0] = 0x10; //set A
-                cpu.CP_n(0x20); //A - value
+                cpu.registers[1] = 0;
+                cpu.SBC_n(0x20); //A - value
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
                 cpu.registers[0] = 0x10; //set A
-                cpu.CP_n(0x28); //A - value
+                cpu.registers[1] = 0;
+                cpu.SBC_n(0x28); //A - value
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
                 break;
             case 3:

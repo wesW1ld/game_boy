@@ -325,13 +325,14 @@ void CPU::INC()
 }
 void CPU::SBC_r(int src)
 {
-
+    CPU::SBC_n(registers[src]);
 }
 void CPU::SBC_n(int value)
 {
     //Subtract the value in r8 and the carry flag from A.
     uint8_t initial = registers[0];
-    registers[0] -= (value + ((registers[1] >> 4)& 0b1));
+    uint8_t carry = ((registers[1] >> 4)& 0b1);
+    registers[0] -= (value + carry);
 
     if(registers[0] == 0)
     {
@@ -341,17 +342,52 @@ void CPU::SBC_n(int value)
     {
         registers[1] = 0b0100;  //zero bit
     }
-    if(initial > value + ((registers[1] >> 4)& 0b1)) //(r8 + carry) > A
+    if((value + carry) > initial) //(r8 + carry) > A
     {
         registers[1] += 0b0001; //carry bit
     }
-    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
-        // if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
-        // {
-        //     registers[1] += 0b0010; //half carry bit
-        // }
-
+    if ((initial & 0x0F) < ((value & 0x0F) + carry))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+    
     registers[1] = registers[1] << 4; //shift flags into place
+}
+void CPU::SBC()
+{
+    CPU::SBC_n(memory.read(getPair(6)));
+}
+void CPU::SUB_r(int src)
+{
+    CPU::SUB_n(registers[src]);
+}
+void CPU::SUB_n(int value)
+{
+    uint8_t initial = registers[0];
+    registers[0] -= value;
+
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+    if(value > initial)
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    if ((initial & 0x0F) < (value & 0x0F))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+    
+    registers[1] = registers[1] << 4; //shift flags into place
+}
+void CPU::SUB()
+{
+    CPU::SUB_n(memory.read(getPair(6)));
 }
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
