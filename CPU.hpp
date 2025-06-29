@@ -57,6 +57,12 @@ class CPU
         void SUB_r(int src);                                          // SUB A, r8
         void SUB_n(int value);                                        // SUB A, n8
         void SUB();                                                   // SUB A, [HL]
+
+        //16-bit arithmetic instructions
+        void ADD_16(int src);                                        //ADD HL, r16
+        void DEC_16(int dest);
+        void INC_16(int dest);
+
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;

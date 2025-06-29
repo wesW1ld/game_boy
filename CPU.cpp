@@ -390,6 +390,27 @@ void CPU::SUB()
     CPU::SUB_n(memory.read(getPair(6)));
 }
 
+//16-bit arithmetic instructions
+void CPU::ADD_16(int src) //pass in first source
+{
+    uint16_t initial = getPair(6);
+    uint16_t val = initial + getPair(src);
+
+    registers[6] += static_cast<uint8_t>(val>>8);;//H
+    registers[7] += static_cast<uint8_t>(val&0xFF);//L
+
+    registers[1] = registers[1] & 0x80;
+    if(val < initial)
+    {
+        registers[0] |= 0x10; //carry flag
+    }
+
+    if(((((initial >> 8) & 0b1) + (((val - initial) >> 8) & 0b1))& 0b1) != ((val >> 8) & 0b1))
+    {
+        registers[0] |= 0x20; //half carry flag
+    }
+}
+
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
     if(firstAdress % 2 == 0)
