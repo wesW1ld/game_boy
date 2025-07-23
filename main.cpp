@@ -60,6 +60,32 @@ int main()
                 std::cout << (int)memory.read(0) << std::endl; //print mem
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //print flags
                 break;
+            case 4:
+                    cpu.registers[6] = 0x0F;
+                    cpu.registers[7] = 0xFF;
+                    cpu.registers[2] = 0x00; // B
+                    cpu.registers[3] = 0x01; // C
+
+                    cpu.ADD_16(2); // HL += BC
+                    std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
+
+                    cpu.registers[6] = 0xFF;
+                    cpu.registers[7] = 0xFF;
+                    cpu.registers[4] = 0x00; // D
+                    cpu.registers[5] = 0x01; // E
+
+                    cpu.ADD_16(4); // HL += DE
+                    std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
+
+                    cpu.registers[6] = 0x0F;
+                    cpu.registers[7] = 0xFF;
+                    cpu.registers[4] = 0xF0; // D
+                    cpu.registers[5] = 0x01; // E
+
+                    cpu.ADD_16(4); // HL += DE
+                    std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
+                    break;
+
             default:
                 uint8_t a = 0b00001000;
                 uint8_t b = 0b00100100;

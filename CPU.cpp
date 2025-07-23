@@ -396,18 +396,18 @@ void CPU::ADD_16(int src) //pass in first source
     uint16_t initial = getPair(6);
     uint16_t val = initial + getPair(src);
 
-    registers[6] += static_cast<uint8_t>(val>>8);;//H
-    registers[7] += static_cast<uint8_t>(val&0xFF);//L
+    registers[6] = static_cast<uint8_t>(val>>8);;//H
+    registers[7] = static_cast<uint8_t>(val&0xFF);//L
 
     registers[1] = registers[1] & 0x80;
     if(val < initial)
     {
-        registers[0] |= 0x10; //carry flag
+        registers[1] |= 0x10; //carry flag
     }
 
     if(((((initial >> 8) & 0b1) + (((val - initial) >> 8) & 0b1))& 0b1) != ((val >> 8) & 0b1))
     {
-        registers[0] |= 0x20; //half carry flag
+        registers[1] |= 0x20; //half carry flag
     }
 }
 
