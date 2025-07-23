@@ -440,7 +440,13 @@ void CPU::AND_n(int value)
     {
         registers[1] |= 0x80; // Z
     }  
-} 
+}
+void CPU::CPL()
+{
+    registers[0] = ~registers[0];
+    registers[1] = registers[1] & 0x90;
+    registers[1] += 0x60;
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {

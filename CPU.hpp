@@ -67,6 +67,7 @@ class CPU
         void AND_r(int src);                                        //AND A,r8
         void AND_HL();                                              //AND A,[HL]
         void AND_n(int value);                                      //AND A,n8
+        void CPL();                                                 //not A
 
     private:
     uint16_t getPair(int firstAdress);
