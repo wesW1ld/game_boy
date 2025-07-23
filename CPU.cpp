@@ -396,7 +396,7 @@ void CPU::ADD_16(int src) //pass in first source
     uint16_t initial = getPair(6);
     uint16_t val = initial + getPair(src);
 
-    registers[6] = static_cast<uint8_t>(val>>8);;//H
+    registers[6] = static_cast<uint8_t>(val>>8);//H
     registers[7] = static_cast<uint8_t>(val&0xFF);//L
 
     registers[1] = registers[1] & 0x80;
@@ -409,6 +409,18 @@ void CPU::ADD_16(int src) //pass in first source
     {
         registers[1] |= 0x20; //half carry flag
     }
+}
+void CPU::DEC_16(int dest)
+{
+    uint16_t val = getPair(dest) - 1;
+    registers[dest] = static_cast<uint8_t>(val>>8);
+    registers[dest+1] = static_cast<uint8_t>(val&0xFF);
+}
+void CPU::INC_16(int dest)
+{
+    uint16_t val = getPair(dest) + 1;
+    registers[dest] = static_cast<uint8_t>(val>>8);
+    registers[dest+1] = static_cast<uint8_t>(val&0xFF);
 }
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
