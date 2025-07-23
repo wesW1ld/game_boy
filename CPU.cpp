@@ -423,6 +423,25 @@ void CPU::INC_16(int dest)
     registers[dest+1] = static_cast<uint8_t>(val&0xFF);
 }
 
+//Bitwise logic instructions
+void CPU::AND_r(int src)
+{
+    CPU::AND_n(registers[src]);
+}
+void CPU::AND_HL()
+{
+    CPU::AND_n(registers[getPair(6)]);
+}
+void CPU::AND_n(int value)
+{
+    registers[0] &= value;
+    registers[1] = 0x20;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    }  
+} 
+
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
     if(firstAdress % 2 == 0)

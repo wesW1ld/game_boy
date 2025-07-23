@@ -63,6 +63,11 @@ class CPU
         void DEC_16(int dest);
         void INC_16(int dest);
 
+        //Bitwise logic instructions
+        void AND_r(int src);                                        //AND A,r8
+        void AND_HL();                                              //AND A,[HL]
+        void AND_n(int value);                                      //AND A,n8
+
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;
