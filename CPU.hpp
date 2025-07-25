@@ -68,6 +68,12 @@ class CPU
         void AND_HL();                                              //AND A,[HL]
         void AND_n(int value);                                      //AND A,n8
         void CPL();                                                 //not A
+        void OR_r(int src);                                         //OR A,r8
+        void OR_HL();                                               //OR A,[HL]
+        void OR_n(int value); 
+        void XOR_r(int src);                                       
+        void XOR_HL();                                               
+        void XOR_n(int value);                                     
 
     private:
     uint16_t getPair(int firstAdress);

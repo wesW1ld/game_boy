@@ -447,6 +447,40 @@ void CPU::CPL()
     registers[1] = registers[1] & 0x90;
     registers[1] += 0x60;
 }
+void CPU::OR_r(int src)
+{
+    CPU::OR_n(registers[src]);
+}
+void CPU::OR_HL()
+{
+    CPU::OR_n(registers[getPair(6)]);
+}
+void CPU::OR_n(int value)
+{
+    registers[0] |= value;
+    registers[1] = 0;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
+}
+void CPU::XOR_r(int src)
+{
+    CPU::XOR_n(registers[src]);
+}                                       
+void CPU::XOR_HL()
+{
+    CPU::XOR_n(registers[getPair(6)]);
+}                                              
+void CPU::XOR_n(int value)
+{
+    registers[0] ^= value;
+    registers[1] = 0;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
+} 
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
