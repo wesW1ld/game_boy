@@ -103,6 +103,12 @@ int main()
                 cpu.registers[4] = 0x04;
                 cpu.BIT_r(3, 4);
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //0011
+
+                //cpu.registers[4] = 0xFF;
+                std::cout << std::bitset<8>(cpu.registers[4]) << std::endl;
+                cpu.SET_r(3, 4);
+                cpu.SET_r(7, 4);
+                std::cout << std::bitset<8>(cpu.registers[4]) << std::endl;
                 break;
             default:
                 uint8_t a = 0b00001000;

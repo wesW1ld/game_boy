@@ -501,6 +501,24 @@ void CPU::BIT_HL(int bit)
         registers[1] += 0x80;
     }
 }
+void CPU::RES_r(int bit, int src)
+{
+    registers[src] = registers[src] & (~(1 << bit));
+}
+void CPU::RES_HL(int bit)
+{
+    uint8_t value = memory.read(getPair(6)) & (~(1 << bit));
+    memory.write(getPair(6), value);
+}
+void CPU::SET_r(int bit, int src)
+{
+    registers[src] = registers[src] | (1 << bit);
+}
+void CPU::SET_HL(int bit)
+{
+    uint8_t value = memory.read(getPair(6)) | (1 << bit);
+    memory.write(getPair(6), value);
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
