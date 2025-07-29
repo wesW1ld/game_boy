@@ -95,6 +95,15 @@ int main()
                 std::cout << std::bitset<8>(cpu.registers[4]) << std::endl;
                 std::cout << std::bitset<8>(cpu.registers[5]) << std::endl;
                 break;
+            case 6:
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //0000
+                cpu.BIT_r(3, 4);
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //1010
+                cpu.registers[1] += 0x10;
+                cpu.registers[4] = 0x04;
+                cpu.BIT_r(3, 4);
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl; //0011
+                break;
             default:
                 uint8_t a = 0b00001000;
                 uint8_t b = 0b00100100;

@@ -430,7 +430,7 @@ void CPU::AND_r(int src)
 }
 void CPU::AND_HL()
 {
-    CPU::AND_n(registers[getPair(6)]);
+    CPU::AND_n(memory.read(getPair(6)));
 }
 void CPU::AND_n(int value)
 {
@@ -453,7 +453,7 @@ void CPU::OR_r(int src)
 }
 void CPU::OR_HL()
 {
-    CPU::OR_n(registers[getPair(6)]);
+    CPU::OR_n(memory.read(getPair(6)));
 }
 void CPU::OR_n(int value)
 {
@@ -470,7 +470,7 @@ void CPU::XOR_r(int src)
 }                                       
 void CPU::XOR_HL()
 {
-    CPU::XOR_n(registers[getPair(6)]);
+    CPU::XOR_n(memory.read(getPair(6)));
 }                                              
 void CPU::XOR_n(int value)
 {
@@ -481,6 +481,26 @@ void CPU::XOR_n(int value)
         registers[1] |= 0x80; // Z
     } 
 } 
+
+//Bit flag instructions
+void CPU::BIT_r(int bit, int src)
+{
+    registers[1] = registers[1] & 0x10;
+    registers[1] += 0x20;
+    if(!(registers[src] & (1 << bit)))
+    {
+        registers[1] += 0x80;
+    }
+}
+void CPU::BIT_HL(int bit)
+{
+    registers[1] = registers[1] & 0x10;
+    registers[1] += 0x20;
+    if(!(memory.read(getPair(6)) & (1 << bit)))
+    {
+        registers[1] += 0x80;
+    }
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
