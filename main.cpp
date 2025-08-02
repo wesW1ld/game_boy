@@ -110,6 +110,18 @@ int main()
                 cpu.SET_r(7, 4);
                 std::cout << std::bitset<8>(cpu.registers[4]) << std::endl;
                 break;
+            case 7:
+                cpu.registers[1] = 0x10;
+                memory.write(0, 0b01000110);
+                cpu.RL_HL();
+                std::cout << std::bitset<8>(memory.read(0)) << std::endl;
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
+                cpu.registers[1] = 0x10;
+                memory.write(0, 0b11000110);
+                cpu.RL_HL();
+                std::cout << std::bitset<8>(memory.read(0)) << std::endl;
+                std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
+                break;
             default:
                 uint8_t a = 0b00001000;
                 uint8_t b = 0b00100100;

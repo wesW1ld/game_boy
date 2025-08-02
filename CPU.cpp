@@ -520,6 +520,37 @@ void CPU::SET_HL(int bit)
     memory.write(getPair(6), value);
 }
 
+//Bit shift instructions
+void CPU::RL_r(int src)
+{
+    int temp = ((registers[1] >> 4) & 0x01); //save C to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] >> 3) & 0x10); //set C to bit 7
+    registers[src] = ((registers[src] << 1) | temp); //shift register and add old C
+
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RL_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    int temp = ((registers[1] >> 4) & 0x01); //save C to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value >> 3) & 0x10); //set C to bit 7
+    value = ((value << 1) | temp); //shift register and add old C
+    memory.write(address, value); 
+
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
     if(firstAdress % 2 == 0)
