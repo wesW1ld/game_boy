@@ -84,12 +84,18 @@ class CPU
         void SET_HL(int bit);                                       // SET u3,[HL]
 
         //Bit shift instructions
-        void RL_r(int src);                        // RL r8
-        void RL_HL();                        // RL [HL]
-                                // RLA
-                                // RLC r8
-                                // RLC [HL]
-                                // RLCA
+        void RL_r(int src);                                         // RL r8
+        void RL_HL();                                               // RL [HL]
+        void RLA();                                                 // RLA
+        void RLC_r(int src);                                        // RLC r8
+        void RLC_HL();                                              // RLC [HL]
+        void RLCA();                                                // RLCA
+        void RR_r(int src);                                                //above but right
+        void RR_HL();
+        void RRA();
+        void RRC_r(int src);
+        void RRC_HL();
+        void RRCA();
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;

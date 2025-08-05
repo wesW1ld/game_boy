@@ -550,6 +550,121 @@ void CPU::RL_HL()
         registers[1] |= 0x80;
     }
 }
+void CPU::RLA()
+{
+    int temp = ((registers[1] >> 4) & 0x01); //save C to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[0] >> 3) & 0x10); //set C to bit 7
+    registers[0] = ((registers[0] << 1) | temp); //shift register and add old C
+}
+void CPU::RLC_r(int src)
+{
+    int temp = ((registers[src] >> 7) & 0x01); //save top to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] >> 3) & 0x10); //set C to bit 7
+    registers[src] = ((registers[src] << 1) | temp); //shift register and add old top
+
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RLC_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    int temp = ((value >> 7) & 0x01); //save top to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value >> 3) & 0x10); //set C to bit 7
+    value = ((value << 1) | temp); //shift register and add old C
+    memory.write(address, value); 
+
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RLCA()
+{
+    int temp = ((registers[0] >> 7) & 0x01); //save top to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[0] >> 3) & 0x10); //set C to bit 7
+    registers[0] = ((registers[0] << 1) | temp); //shift register and add old top
+}
+void CPU::RR_r(int src)
+{
+    int temp = ((registers[1] << 3) & 0x80); //save C to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 1
+    registers[src] = ((registers[src] >> 1) | temp); //shift register and add old C
+
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RR_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    int temp = ((registers[1] << 3) & 0x80); //save C to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value << 4) & 0x10); //set C to bit 1
+    value = ((value >> 1) | temp); //shift register and add old C
+    memory.write(address, value); 
+
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RRA()
+{
+    int temp = ((registers[1] << 3) & 0x80); //save C to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[0] << 4) & 0x10); //set C to bit 1
+    registers[0] = ((registers[0] >> 1) | temp); //shift register and add old C
+}
+void CPU::RRC_r(int src)
+{
+    int temp = ((registers[src] << 7) & 0x80); //save bottom to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 0
+    registers[src] = ((registers[src] >> 1) | temp); //shift register and add old top
+
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RRC_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    int temp = ((value << 7) & 0x80); //save bottom to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value << 4) & 0x10); //set C to bit 0
+    value = ((value >> 1) | temp); //shift register and add old top
+    memory.write(address, value); 
+
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::RRCA()
+{
+    int temp = ((registers[0] << 7) & 0x80); //save bottom to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[0] << 4) & 0x10); //set C to bit 0
+    registers[0] = ((registers[0] >> 1) | temp); //shift register and add old top
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
