@@ -114,14 +114,14 @@ int main()
                 cpu.registers[1] = 0x10;
                 //memory.write(0, 0b01000110);
                 cpu.registers[4] = 0b01000110;
-                cpu.RRC_r(4);
+                cpu.SLA_r(4);
                 //std::cout << std::bitset<8>(memory.read(0)) << std::endl;
                 std::cout << std::bitset<8>(cpu.registers[4]) << std::endl;
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;
                 cpu.registers[1] = 0x10;
-                //memory.write(0, 0b01000111);
-                cpu.registers[4] = 0b01000111;
-                cpu.RRC_r(4);
+                //memory.write(0, 0b11000110);
+                cpu.registers[4] = 0b11000110;
+                cpu.SLA_r(4);
                 //std::cout << std::bitset<8>(memory.read(0)) << std::endl;
                 std::cout << std::bitset<8>(cpu.registers[4]) << std::endl;
                 std::cout << std::bitset<8>(cpu.registers[1]) << std::endl;

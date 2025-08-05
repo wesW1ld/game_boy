@@ -96,6 +96,12 @@ class CPU
         void RRC_r(int src);
         void RRC_HL();
         void RRCA();
+        void SLA_r(int src);
+        void SLA_HL();
+        void SRA_r(int src);
+        void SRA_HL();
+        void SRL_r(int src);
+        void SRL_HL();
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;

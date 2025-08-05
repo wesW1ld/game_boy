@@ -665,6 +665,45 @@ void CPU::RRCA()
     registers[1] |= ((registers[0] << 4) & 0x10); //set C to bit 0
     registers[0] = ((registers[0] >> 1) | temp); //shift register and add old top
 }
+void CPU::SLA_r(int src)
+{
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] >> 3) & 0x10); //set C to bit 7
+    registers[src] = ((registers[src] << 1)); //shift register
+
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::SLA_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value >> 3) & 0x10); //set C to bit 7
+    value = ((value << 1)); //shift register
+    memory.write(address, value); 
+
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::SRA_r(int src)
+{
+
+}
+void CPU::SRA_HL()
+{
+
+}
+void CPU::SRL_r(int src)
+{
+    
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
