@@ -102,6 +102,8 @@ class CPU
         void SRA_HL();
         void SRL_r(int src);
         void SRL_HL();
+        void SWAP_r(int src);
+        void SWAP_HL();
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;

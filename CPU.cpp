@@ -694,14 +694,91 @@ void CPU::SLA_HL()
 }
 void CPU::SRA_r(int src)
 {
+    int temp = ((registers[src]) & 0x80); //save top to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 0
+    registers[src] = (((registers[src] >> 1) & 0x7F) | temp); //shift register and add top
 
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
 }
 void CPU::SRA_HL()
 {
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    int temp = ((value) & 0x80); //save top to temp
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value << 4) & 0x10); //set C to bit 0
+    value = (((value >> 1) & 0x7F) | temp); //shift register and add top
+    memory.write(address, value); 
 
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
 }
 void CPU::SRL_r(int src)
 {
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 0
+    registers[src] = ((registers[src] >> 1) & 0x7F); //shift register and add top
+
+    //flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::SRL_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+    registers[1] = 0; //wipe flags
+    registers[1] |= ((value << 4) & 0x10); //set C to bit 0
+    value = (((value >> 1) & 0x7F)); //shift register and add top
+    memory.write(address, value); 
+
+    //flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+}
+void CPU::SWAP_r(int src)
+{
+    registers[1] = 0; //wipe flags
+    if(registers[src] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+    else
+    {
+        int temp = ((registers[src]) & 0xF0); //save top 4 in temp
+        registers[src] = (registers[src] << 4); //shift 4 left
+        registers[src] |= ((temp >> 4) & 0x0F); //add old top to bottom
+    }
+}
+void CPU::SWAP_HL()
+{
+    uint16_t address = getPair(6);
+    uint8_t value= memory.read(address);
+
+    registers[1] = 0; //wipe flags
+    if(value == 0)
+    {
+        registers[1] |= 0x80;
+    }
+    else
+    {
+        int temp = ((value) & 0xF0); //save top 4 in temp
+        value = (value << 4); //shift 4 left
+        value |= ((temp >> 4) & 0x0F); //add old top to bottom
+        memory.write(address, value); 
+    }
     
 }
 
