@@ -88,7 +88,7 @@ class CPU
         void RLC_r(int src);                                        // RLC r8
         void RLC_HL();                                              // RLC [HL]
         void RLCA();                                                // RLCA
-        void RR_r(int src);                                                //above but right
+        void RR_r(int src);                                         //above but right
         void RR_HL();
         void RRA();
         void RRC_r(int src);
@@ -104,10 +104,10 @@ class CPU
         void SWAP_HL();
 
         //Stack manipulation instructions
-        void ADD_fSP();            //ADD HL,SP
-        void ADD_tSP(int8_t e8);            //ADD SP,e8
-                    //DEC SP
-                    //INC SP
+        void ADD_fSP();                                             //ADD HL,SP
+        void ADD_tSP(int8_t e8);                                    //ADD SP,e8
+        void DEC_SP();                                              //DEC SP
+        void INC_SP();                                              //INC SP
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;

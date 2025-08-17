@@ -806,6 +806,20 @@ void CPU::ADD_tSP(int8_t e8)
         registers[1] |= 0x20; //half carry flag
     }
 }
+void CPU::DEC_SP()
+{
+    uint16_t val = static_cast<uint16_t>(getPair(8) - 1);
+
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val & 0xFF);
+}
+void CPU::INC_SP()
+{
+    uint16_t val = static_cast<uint16_t>(getPair(8) + 1);
+
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val & 0xFF);
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
