@@ -10,16 +10,16 @@ CPU::CPU(Memory& mem):memory(mem)
 // 5	h	Half Carry flag (BCD)
 // 4	c	Carry flag
 // 0-3      Unused(0)
-//"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L"
-// 0     1     2     3     4     5     6     7
+//"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L", "SP", "PC"
+// 0     1     2     3     4     5     6     7     89   1011
 {
-    // Initialize registers and program counter
-    for (int i = 0; i < 8; ++i)
+    // Initialize registers and stack pointer
+    for (int i = 0; i < 12; ++i)
     {
         registers[i] = 0;
     }
-    PC = 0; // Initialize Program Counter to 0
-    SP = 0;
+    registers[8] = 0xFF;
+    registers[9] = 0xFE;
 }
 
 void CPU::start()
@@ -780,6 +780,31 @@ void CPU::SWAP_HL()
         memory.write(address, value); 
     }
     
+}
+
+//Stack manipulation instructions
+void CPU::ADD_fSP()
+{
+    CPU::ADD_16(8);
+}
+void CPU::ADD_tSP(int8_t e8)
+{
+    uint16_t initial = getPair(8);
+    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(e8));
+
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val & 0xFF);
+
+    registers[1] = 0;
+    if((registers[8] & 0x01) != ((initial >> 8)& 0x01))
+    {
+        registers[1] |= 0x10; //carry flag
+    }
+
+    if(((((initial >> 4) & 0b1) + (((val - initial) >> 4) & 0b1))& 0b1) != ((val >> 4) & 0b1))
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
 }
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error

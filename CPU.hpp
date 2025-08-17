@@ -9,9 +9,7 @@
 class CPU
 {
     public:
-        uint8_t registers[8];
-        uint16_t PC; // Program Counter
-        uint16_t SP; // Stack Pointer
+        uint8_t registers[12];
 
         CPU(Memory& mem);
 
@@ -104,6 +102,12 @@ class CPU
         void SRL_HL();
         void SWAP_r(int src);
         void SWAP_HL();
+
+        //Stack manipulation instructions
+        void ADD_fSP();            //ADD HL,SP
+        void ADD_tSP(int8_t e8);            //ADD SP,e8
+                    //DEC SP
+                    //INC SP
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;
