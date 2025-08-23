@@ -108,6 +108,10 @@ class CPU
         void ADD_tSP(int8_t e8);                                    //ADD SP,e8
         void DEC_SP();                                              //DEC SP
         void INC_SP();                                              //INC SP
+        void LD_SP(uint16_t val);                                   // LD SP,n16
+        void LD_fSP(uint16_t address);                              // LD [n16],SP
+                                    // LD HL,SP+e8
+                                    // LD SP,HL
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;

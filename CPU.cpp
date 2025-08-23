@@ -820,6 +820,18 @@ void CPU::INC_SP()
     registers[8] = static_cast<uint8_t>(val>>8);
     registers[9] = static_cast<uint8_t>(val & 0xFF);
 }
+void CPU::LD_SP(uint16_t val)
+{
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val & 0xFF);
+}
+void CPU::LD_fSP(uint16_t address)
+{
+    uint16_t SP = getPair(8);
+
+    memory.write(address, SP & 0xFF);
+    memory.write(address + 1, SP>>8);
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
