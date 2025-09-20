@@ -832,6 +832,60 @@ void CPU::LD_fSP(uint16_t address)
     memory.write(address, SP & 0xFF);
     memory.write(address + 1, SP>>8);
 }
+void CPU::LD_HL(int8_t e8)
+{
+    uint16_t initial = getPair(8);
+    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(e8));
+
+    registers[6] = static_cast<uint8_t>(val>>8);
+    registers[7] = static_cast<uint8_t>(val & 0xFF);
+
+    registers[1] = 0;
+    if((registers[6] & 0x01) != ((initial >> 8)& 0x01))
+    {
+        registers[1] |= 0x10; //carry flag
+    }
+
+    if(((((initial >> 4) & 0b1) + (((val - initial) >> 4) & 0b1))& 0b1) != ((val >> 4) & 0b1))
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
+}
+void CPU::LD_fHL()
+{
+    uint16_t val = getPair(6);
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val & 0xFF);
+}
+void CPU::POPAF()
+{
+    registers[1] = memory.read(getPair(8)); //LD F, [SP]
+    INC_16(8);
+    registers[0] = memory.read(getPair(8)); //LD A, [SP]
+    INC_16(8);
+    registers[1] = registers[1] & 0xF0;
+}
+void CPU::POP(int dest)
+{
+    registers[dest+1] = memory.read(getPair(8)); //LD C, E or L, [SP]
+    INC_16(8);
+    registers[dest] = memory.read(getPair(8)); //LD B, D or H, [SP]
+    INC_16(8);
+}
+void CPU::PUSHAF()
+{
+    DEC_16(8);
+    memory.write(getPair(8), registers[0]);
+    DEC_16(8);
+    memory.write(getPair(8), registers[1]);
+}
+void CPU::PUSH(int dest)
+{
+    DEC_16(8);
+    memory.write(getPair(8), registers[dest]); //LD B, D or H, [SP]
+    DEC_16(8);
+    memory.write(getPair(8), registers[dest + 1]); //LD C, E or L, [SP]
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
