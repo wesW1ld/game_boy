@@ -969,6 +969,47 @@ void CPU::JP(int cc, uint16_t address)
             break;
     }
 }
+void CPU::JR(int8_t e8)
+{
+    uint16_t initial = getPair(10);
+    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(e8));
+
+    registers[10] = static_cast<uint8_t>(val>>8);
+    registers[11] = static_cast<uint8_t>(val & 0xFF);
+}
+void CPU::JR(int cc, int8_t e8)
+{
+    switch(cc)
+    {
+        case 0:
+            if(registers[1] & 0x80) //if z is set
+            {
+                JR(e8);
+            }
+            break;
+        case 1:
+            if(!(registers[1] & 0x80)) //if z is not set
+            {
+                JR(e8);
+            }
+            break;
+        case 2:
+            if(registers[1] & 0x10) //if c is set
+            {
+                JR(e8);
+            }
+            break;
+        case 3:
+            if(!(registers[1] & 0x10)) //if c is not set
+            {
+                JR(e8);
+            }
+            break;
+        default:
+            //error
+            break;
+    }
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {

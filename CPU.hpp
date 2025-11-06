@@ -123,6 +123,8 @@ class CPU
         void JPHL();
         void JP(uint16_t address);
         void JP(int cc, uint16_t address);
+        void JR(int8_t e8);
+        void JR(int cc, int8_t e8);
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;
