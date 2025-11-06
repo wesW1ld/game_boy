@@ -887,6 +887,89 @@ void CPU::PUSH(int dest)
     memory.write(getPair(8), registers[dest + 1]); //LD C, E or L, [SP]
 }
 
+//Jumps and subroutine instructions
+void CPU::CALL(uint16_t address)
+{
+    PUSH(10);
+    JP(address);
+}
+void CPU::CALL(int cc, uint16_t address) //cc 0=Z 1=NZ 2=C 3=NC
+{
+    switch(cc)
+    {
+        case 0:
+            if(registers[1] & 0x80) //if z is set
+            {
+                CALL(address);
+            }
+            break;
+        case 1:
+            if(!(registers[1] & 0x80)) //if z is not set
+            {
+                CALL(address);
+            }
+            break;
+        case 2:
+            if(registers[1] & 0x10) //if c is set
+            {
+                CALL(address);
+            }
+            break;
+        case 3:
+            if(!(registers[1] & 0x10)) //if c is not set
+            {
+                CALL(address);
+            }
+            break;
+        default:
+            //error
+            break;
+    }
+}
+void CPU::JPHL()
+{
+    registers[10]= 6;
+    registers[11]= 7;
+}
+void CPU::JP(uint16_t address)
+{
+    registers[10] = static_cast<uint8_t>(address>>8);
+    registers[11] = static_cast<uint8_t>(address & 0xFF);
+}
+void CPU::JP(int cc, uint16_t address)
+{
+    switch(cc)
+    {
+        case 0:
+            if(registers[1] & 0x80) //if z is set
+            {
+                JP(address);
+            }
+            break;
+        case 1:
+            if(!(registers[1] & 0x80)) //if z is not set
+            {
+                JP(address);
+            }
+            break;
+        case 2:
+            if(registers[1] & 0x10) //if c is set
+            {
+                JP(address);
+            }
+            break;
+        case 3:
+            if(!(registers[1] & 0x10)) //if c is not set
+            {
+                JP(address);
+            }
+            break;
+        default:
+            //error
+            break;
+    }
+}
+
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
     if(firstAdress % 2 == 0)

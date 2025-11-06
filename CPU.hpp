@@ -115,7 +115,14 @@ class CPU
         void POPAF();                                               // POP AF
         void POP(int dest);                                         // POP r16
         void PUSHAF();                                              // PUSH AF
-        void PUSH(int dest);                                        // PUSH r16    
+        void PUSH(int dest);                                        // PUSH r16  
+
+        //Jumps and subroutine instructions
+        void CALL(uint16_t address);
+        void CALL(int cc, uint16_t address);
+        void JPHL();
+        void JP(uint16_t address);
+        void JP(int cc, uint16_t address);
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;
