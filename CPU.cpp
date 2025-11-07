@@ -20,6 +20,9 @@ CPU::CPU(Memory& mem):memory(mem)
     }
     registers[8] = 0xFF;
     registers[9] = 0xFE;
+
+    IME = false;
+    pendingEnableIME = false;
 }
 
 void CPU::start()
@@ -1010,6 +1013,115 @@ void CPU::JR(int cc, int8_t e8)
             break;
     }
 }
+void CPU::RET()
+{
+    POP(10);
+}
+void CPU::RET(int cc)
+{
+    switch(cc)
+    {
+        case 0:
+            if(registers[1] & 0x80) //if z is set
+            {
+                RET();
+            }
+            break;
+        case 1:
+            if(!(registers[1] & 0x80)) //if z is not set
+            {
+                RET();
+            }
+            break;
+        case 2:
+            if(registers[1] & 0x10) //if c is set
+            {
+                RET();
+            }
+            break;
+        case 3:
+            if(!(registers[1] & 0x10)) //if c is not set
+            {
+                RET();
+            }
+            break;
+        default:
+            //error
+            break;
+    }
+}
+void CPU::RETI()
+{
+    EI();
+    RET();
+}
+void CPU::RST(uint8_t vec)
+{
+    PUSH(10);
+    registers[10] = 0x00;
+    registers[11] = vec;
+}
+
+//Interrupt-related instructions
+void CPU::DI()
+{
+    IME = false;
+}
+void CPU::EI()
+{
+    pendingEnableIME = true;
+}
+
+//Carry flag instructions
+void CPU::CCF()
+{
+    registers[1] &= 0x90;
+    registers[1] ^= (1 << 4);
+}
+void CPU::SCF()
+{
+    registers[1] &= 0x80;
+    registers[1] |= 0x10;
+}
+
+ //Miscellaneous instructions
+void CPU::DAA()
+{
+    uint8_t adj = 0;
+    if(registers[1] & 0x40) //sub
+    {
+        if(registers[1] & 0x20) //half carry
+        {
+            adj += 0x06;
+        }
+        if(registers[1] & 0x10)  //carry
+        {
+            adj += 0x60;
+        }
+        registers[0] -= adj;
+    }
+    else
+    {
+        if((registers[1] & 0x20) || ((registers[0] & 0x0F) > 0x09)) //half carry or A & $F > $9
+        {
+            adj += 0x06;
+        }
+        if((registers[1] & 0x10) || (registers[0] > 0x99)) //carry or A > $99
+        {
+            adj += 0x60;
+            registers[1] |= 0x10;
+        }
+        registers[0] += adj;
+    }
+
+    //flags
+    if(registers[0] == 0)
+    {
+        registers[1] |= 0x80;
+    }
+    registers[1] &= 0b11010000;
+}
+void CPU::NOP(){}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {

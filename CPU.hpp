@@ -10,6 +10,8 @@ class CPU
 {
     public:
         uint8_t registers[12];
+        bool IME;  // Interrupt Master Enable flag
+        bool pendingEnableIME; // EI sets this, IME becomes true next instruction   
 
         CPU(Memory& mem);
 
@@ -125,6 +127,25 @@ class CPU
         void JP(int cc, uint16_t address);
         void JR(int8_t e8);
         void JR(int cc, int8_t e8);
+        void RET(int cc);
+        void RET();
+        void RETI();
+        void RST(uint8_t vec);
+
+        //Interrupt-related instructions
+        void DI();
+        void EI();
+        void HALT();
+
+        //Carry flag instructions
+        void CCF();
+        void SCF();
+
+        //Miscellaneous instructions
+        void DAA();
+        void NOP();
+        void STOP();
+
     private:
     uint16_t getPair(int firstAdress);
     Memory& memory;
