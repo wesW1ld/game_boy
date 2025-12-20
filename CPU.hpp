@@ -11,14 +11,15 @@ class CPU
     public:
         uint8_t registers[12];
         bool IME;  // Interrupt Master Enable flag
-        bool pendingEnableIME; // EI sets this, IME becomes true next instruction   
+        bool pendingEnableIME; // EI sets this, IME becomes true next instruction 
+        uint8_t currentOpcode;  
 
         CPU(Memory& mem);
 
-        void start();
+        void step();
 
         //load instructions
-        void LD_r8_r8(int dest, int src);                             // LD r8, r8
+        void LD_r8_r8();                             // LD r8, r8
         void LD_r8_n8(int dest, uint8_t val);                         // LD r8, n8
         void LD_r16_n16(int dest, uint16_t val);                      // LD r16, n16
         void LD_memHL_r8(int src);                                    // LD [HL], r8
@@ -148,6 +149,7 @@ class CPU
 
     private:
     uint16_t getPair(int firstAdress);
+    int getReg(uint8_t reg);
     Memory& memory;
 };
 

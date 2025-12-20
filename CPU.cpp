@@ -25,16 +25,22 @@ CPU::CPU(Memory& mem):memory(mem)
     pendingEnableIME = false;
 }
 
-void CPU::start()
+void CPU::step()
 {
-    //"using namespace std;" is bad practice
-    std::cout << "CPU started.";
+    //fetch
+    currentOpcode = memory.read(getPair(10));
+    CPU::INC_16(10);
+
+    //execute
+    
 }
 
 //load instructions
-void CPU::LD_r8_r8(int dest, int src)
+void CPU::LD_r8_r8()
 {
-    registers[dest] = registers[src];
+    uint8_t dest = (currentOpcode >> 3) & 0x07;
+    uint8_t src = currentOpcode & 0x07;
+    registers[getReg(dest)] = registers[getReg(src)];
 }
 void CPU::LD_r8_n8(int dest, uint8_t val)
 {
@@ -1135,3 +1141,36 @@ uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
         return 0;
     }
 }
+
+int CPU::getReg(uint8_t reg)
+{
+    switch(reg)
+    {
+        case 0x00:
+            return 2;
+            break;
+        case 0x01:
+            return 3;
+            break;
+        case 0x02:
+            return 4;
+            break;
+        case 0x03:
+            return 5;
+            break;
+        case 0x04:
+            return 6;
+            break;
+        case 0x05:
+            return 7;
+            break;
+        case 0x7:
+            return 0;
+            break;
+        default:
+            return -1;
+    }
+}
+
+//"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L", "SP", "PC"
+// 0     1     2     3     4     5     6     7     89   1011
