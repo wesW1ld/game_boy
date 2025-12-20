@@ -28,26 +28,32 @@ CPU::CPU(Memory& mem):memory(mem)
 void CPU::step()
 {
     //fetch
-    currentOpcode = memory.read(getPair(10));
-    CPU::INC_16(10);
+    currentOpcode = memory.read(PC());
 
     //execute
+
+
+    //increase PC based on instruction.bytes
     
 }
 
 //load instructions
 void CPU::LD_r8_r8()
 {
-    uint8_t dest = (currentOpcode >> 3) & 0x07;
-    uint8_t src = currentOpcode & 0x07;
-    registers[getReg(dest)] = registers[getReg(src)];
+    int dest = getReg((currentOpcode >> 3) & 0x07);
+    int src = getReg(currentOpcode & 0x07);
+    registers[dest] = registers[src];
 }
-void CPU::LD_r8_n8(int dest, uint8_t val)
+void CPU::LD_r8_n8()
 {
-    registers[dest] = val;
+    int dest = getReg((currentOpcode >> 3) & 0x07);
+    registers[dest] = imm8();
 }
-void CPU::LD_r16_n16(int dest, uint16_t val)
+void CPU::LD_r16_n16()
 {
+    int dest = getReg16((currentOpcode >> 4) & 0x0F);
+    uint16_t val = imm16();
+
     if(dest % 2 == 0)
     {
         registers[dest] = static_cast<uint8_t>(val>>8);
@@ -58,16 +64,18 @@ void CPU::LD_r16_n16(int dest, uint16_t val)
         std::cout << "Ivalid 16 bit address" << std::endl;
     }
 }
-void CPU::LD_memHL_r8(int src)
+void CPU::LD_memHL_r8()
 {
+    int src = getReg(currentOpcode & 0x07);
     memory.write(getPair(6), registers[src]);
 }
-void CPU::LD_memHL_n8(uint8_t value)
+void CPU::LD_memHL_n8()
 {
-    memory.write(getPair(6), value);
+    memory.write(getPair(6), imm8());
 }
-void CPU::LD_r8_memHL(int dest)
+void CPU::LD_r8_memHL()
 {
+    int dest = getReg((currentOpcode >> 3) & 0x07);
     registers[dest] = memory.read(getPair(6));
 }
 void CPU::LD_mem_r16_A(int dest)
@@ -1170,6 +1178,38 @@ int CPU::getReg(uint8_t reg)
         default:
             return -1;
     }
+}
+int CPU::getReg16(uint8_t reg)
+{
+    switch(reg)
+    {
+        case 0x00:
+            return 2;
+            break;
+        case 0x01:
+            return 4;
+            break;
+        case 0x02:
+            return 6;
+            break;
+        case 0x03:
+            return 8;
+            break;
+    }
+}
+
+uint8_t CPU::imm8()
+{
+    return memory.read(PC() + 1);
+}
+uint16_t CPU::imm16()
+{
+    return memory.read(PC() + 1) | (memory.read(PC() + 2) << 8);
+}
+
+uint16_t CPU::PC()
+{
+    return getPair(10);
 }
 
 //"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L", "SP", "PC"

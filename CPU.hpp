@@ -20,11 +20,11 @@ class CPU
 
         //load instructions
         void LD_r8_r8();                             // LD r8, r8
-        void LD_r8_n8(int dest, uint8_t val);                         // LD r8, n8
-        void LD_r16_n16(int dest, uint16_t val);                      // LD r16, n16
-        void LD_memHL_r8(int src);                                    // LD [HL], r8
-        void LD_memHL_n8(uint8_t value);                              // LD [HL], n8
-        void LD_r8_memHL(int dest);                                   // LD r8, [HL]
+        void LD_r8_n8();                         // LD r8, n8
+        void LD_r16_n16();                      // LD r16, n16
+        void LD_memHL_r8();                                    // LD [HL], r8
+        void LD_memHL_n8();                              // LD [HL], n8
+        void LD_r8_memHL();                                   // LD r8, [HL]
         void LD_mem_r16_A(int dest);                                  // LD [r16], A
         void LD_mem_n16_A(uint16_t dest);                             // LD [n16], A
         void LDH_mem_n16_A(uint16_t dest);                            // LDH [n16], A
@@ -150,6 +150,10 @@ class CPU
     private:
     uint16_t getPair(int firstAdress);
     int getReg(uint8_t reg);
+    int getReg16(uint8_t reg);
+    uint8_t imm8();
+    uint16_t imm16();
+    uint16_t PC();
     Memory& memory;
 };
 
