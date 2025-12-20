@@ -78,39 +78,37 @@ void CPU::LD_r8_memHL()
     int dest = getReg((currentOpcode >> 3) & 0x07);
     registers[dest] = memory.read(getPair(6));
 }
-void CPU::LD_mem_r16_A(int dest)
+void CPU::LD_mem_r16_A() //only BC and DE
 {
+    int dest = getReg16((currentOpcode >> 4) & 0x0F);
     memory.write(getPair(dest), registers[0]);
 }
-void CPU::LD_mem_n16_A(uint16_t dest)
+void CPU::LD_mem_n16_A()
 {
-    memory.write(dest, registers[0]);
+    memory.write(imm16(), registers[0]);
 }
-void CPU::LDH_mem_n16_A(uint16_t dest)
+void CPU::LDH_mem_n16_A()
 {
-    if(dest > 0xFF00 && dest < 0xFFFF)
-    {
-        memory.write(dest, registers[0]);
-    }
+    uint16_t dest = 0xFF00 | imm8();
+    memory.write(dest, registers[0]);
 }
 void CPU::LDH_mem_C_A()
 {
     memory.write(0xFF00 + registers[3], registers[0]);
 }
-void CPU::LD_A_mem_r16(int dest)
+void CPU::LD_A_mem_r16()
 {
-    registers[0] = memory.read(getPair(dest));
+    int src = getReg16((currentOpcode >> 4) & 0x0F);
+    registers[0] = memory.read(getPair(src));
 }
-void CPU::LD_A_mem_n16(uint16_t src)
+void CPU::LD_A_mem_n16()
 {
+    registers[0] = memory.read(imm16());
+}
+void CPU::LDH_A_mem_n16()
+{
+    uint16_t src = 0xFF00 | imm8();
     registers[0] = memory.read(src);
-}
-void CPU::LDH_A_mem_n16(uint8_t src)
-{
-    if(src > 0xFF00 && src < 0xFFFF)
-    {
-        registers[0] = memory.read(src);
-    }
 }
 void CPU::LDH_A_mem_C()
 {

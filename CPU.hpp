@@ -25,13 +25,13 @@ class CPU
         void LD_memHL_r8();                                    // LD [HL], r8
         void LD_memHL_n8();                              // LD [HL], n8
         void LD_r8_memHL();                                   // LD r8, [HL]
-        void LD_mem_r16_A(int dest);                                  // LD [r16], A
-        void LD_mem_n16_A(uint16_t dest);                             // LD [n16], A
-        void LDH_mem_n16_A(uint16_t dest);                            // LDH [n16], A
+        void LD_mem_r16_A();                                  // LD [r16], A
+        void LD_mem_n16_A();                             // LD [n16], A
+        void LDH_mem_n16_A();                            // LDH [n16], A
         void LDH_mem_C_A();                                           // LDH [C], A
-        void LD_A_mem_r16(int dest);                                  // LD A, [r16]
-        void LD_A_mem_n16(uint16_t src);                              // LD A, [n16]
-        void LDH_A_mem_n16(uint8_t src);                              // LDH A, [n16]
+        void LD_A_mem_r16();                                  // LD A, [r16]
+        void LD_A_mem_n16();                              // LD A, [n16]
+        void LDH_A_mem_n16();                              // LDH A, [n16]
         void LDH_A_mem_C();                                           // LDH A, [C]
         void LD_mem_HLI_A();                                          // LD [HLI], A (post-increment)
         void LD_mem_HLD_A();                                          // LD [HLD], A (post-decrement)
