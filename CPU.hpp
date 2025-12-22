@@ -39,24 +39,24 @@ class CPU
         void LD_A_mem_HLD();                                          // LD A, [HLD]
 
         //8-bit arithmetic instructions
-        void ADC_r(int src);                                          // ADC A, r8
-        void ADC_n(int value);                                        // ADC A, n8
+        void ADC_r();                                          // ADC A, r8
+        void ADC_n();                                        // ADC A, n8
         void ADC();                                                   // ADC A, [HL]
-        void ADD_r(int src);                                          // ADD A, r8
-        void ADD_n(int value);                                        // ADD A, n8
+        void ADD_r();                                          // ADD A, r8
+        void ADD_n();                                        // ADD A, n8
         void ADD();                                                   // ADD A, [HL]
-        void CP_r(int src);                                           // CP A,r8
-        void CP_n(int value);                                         // CP A,n8
+        void CP_r();                                           // CP A,r8
+        void CP_n();                                         // CP A,n8
         void CP();                                                    // CP A,[HL]
-        void DEC_r(int src);                                          // DEC r8
+        void DEC_r();                                          // DEC r8
         void DEC();                                                   // DEC [HL]
-        void INC_r(int src);                                          // INC r8
+        void INC_r();                                          // INC r8
         void INC();                                                   // INC [HL]
-        void SBC_r(int src);                                          // SBC A, r8
-        void SBC_n(int value);                                        // SBC A, n8
+        void SBC_r();                                          // SBC A, r8
+        void SBC_n();                                        // SBC A, n8
         void SBC();                                                   // SBC A, [HL]
-        void SUB_r(int src);                                          // SUB A, r8
-        void SUB_n(int value);                                        // SUB A, n8
+        void SUB_r();                                          // SUB A, r8
+        void SUB_n();                                        // SUB A, n8
         void SUB();                                                   // SUB A, [HL]
 
         //16-bit arithmetic instructions

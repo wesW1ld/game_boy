@@ -168,12 +168,34 @@ void CPU::LD_A_mem_HLD()
 }
 
 //8-bit arithmetic instructions
-void CPU::ADC_r(int src)
+void CPU::ADC_r()
 {
-    CPU::ADC_n(registers[src]);
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    uint8_t initial = registers[0];
+    registers[0] += value + ((registers[1] >> 4)& 0b1);
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1000;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0;  //zero bit
+    }
+    if(initial > registers[0])
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::ADC_n(int value)
+void CPU::ADC_n()
 {
+    uint8_t value = imm8();
     uint8_t initial = registers[0];
     registers[0] += value + ((registers[1] >> 4)& 0b1);
     if(registers[0] == 0)
@@ -198,15 +220,58 @@ void CPU::ADC_n(int value)
 }
 void CPU::ADC()
 {
-    CPU::ADC_n(memory.read(getPair(6)));
+    uint8_t value = memory.read(getPair(6));
+    uint8_t initial = registers[0];
+    registers[0] += value + ((registers[1] >> 4)& 0b1);
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1000;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0;  //zero bit
+    }
+    if(initial > registers[0])
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::ADD_r(int src)
+void CPU::ADD_r()
 {
-    CPU::ADD_n(registers[src]);
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    uint8_t initial = registers[0];
+    registers[0] += value;
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1000;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0;  //zero bit
+    }
+    if(initial > registers[0])
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::ADD_n(int value)
+void CPU::ADD_n()
 {
     uint8_t initial = registers[0];
+    uint8_t value = imm8();
     registers[0] += value;
     if(registers[0] == 0)
     {
@@ -230,14 +295,62 @@ void CPU::ADD_n(int value)
 }
 void CPU::ADD()
 {
-    CPU::ADD_n(memory.read(getPair(6)));
+    uint8_t value = memory.read(getPair(6));
+    uint8_t initial = registers[0];
+    registers[0] += value;
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1000;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0;  //zero bit
+    }
+    if(initial > registers[0])
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    if(((((initial >> 4) & 0b1) + ((value >> 4) & 0b1))& 0b1) != ((registers[0] >> 4) & 0b1))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
+
 }
-void CPU::CP_r(int src)
+void CPU::CP_r()
 {
-    CPU::CP_n(registers[src]);
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    uint8_t initial = registers[0];
+    uint8_t subd = initial - value;
+
+    if(subd == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    //if((((((initial >> 4) & 0b1)+0b10) - (((value >> 4) & 0b1)+0b10))& 0b1) != ((subd >> 4) & 0b1))
+    if ((initial & 0x0F) < (value & 0x0F)) //better
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    if(initial < value)
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::CP_n(int value) //add a value ahead to carry from on A, still a problem if value > initial
+void CPU::CP_n() //add a value ahead to carry from on A, still a problem if value > initial
 {
+    uint8_t value = imm8();
     uint8_t initial = registers[0];
     uint8_t subd = initial - value;
 
@@ -266,17 +379,43 @@ void CPU::CP_n(int value) //add a value ahead to carry from on A, still a proble
 }
 void CPU::CP()
 {
-    CPU::CP_n(memory.read(getPair(6)));
+    uint8_t value = memory.read(getPair(6));
+    uint8_t initial = registers[0];
+    uint8_t subd = initial - value;
+
+    if(subd == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+
+    //          bit 4         +    bit 4   no carry  is not equal  to bit 4 of sum, then there was a carry from before
+    //if((((((initial >> 4) & 0b1)+0b10) - (((value >> 4) & 0b1)+0b10))& 0b1) != ((subd >> 4) & 0b1))
+    if ((initial & 0x0F) < (value & 0x0F)) //better
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+
+    if(initial < value)
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::DEC_r(int src)
+void CPU::DEC_r()
 {
-    uint8_t initial = registers[src];
-    registers[src] -= 1;
+    int dest = getReg((currentOpcode >> 3) & 0x07);
+    uint8_t initial = registers[dest];
+    registers[dest] -= 1;
 
     registers[1] = registers[1] & 0x10; //keep current carry flag
     registers[1] |= 0x40; //subtraction flag
 
-    if(registers[src] == 0)
+    if(registers[dest] == 0)
     {
         registers[1] |= 0x80; //zero flag
     }
@@ -304,14 +443,15 @@ void CPU::DEC()
         registers[1] |= 0x20; //half carry flag
     }
 }
-void CPU::INC_r(int src)
+void CPU::INC_r()
 {
-    uint8_t initial = registers[src];
-    registers[src] += 1;
+    int dest = getReg((currentOpcode >> 3) & 0x07);
+    uint8_t initial = registers[dest];
+    registers[dest] += 1;
 
     registers[1] = registers[1] & 0x10; //keep current carry flag
 
-    if(registers[src] == 0)
+    if(registers[dest] == 0)
     {
         registers[1] |= 0x80; //zero flag
     }
@@ -338,12 +478,35 @@ void CPU::INC()
         registers[1] |= 0x20; //half carry flag
     }
 }
-void CPU::SBC_r(int src)
+void CPU::SBC_r()
 {
-    CPU::SBC_n(registers[src]);
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    uint8_t initial = registers[0];
+    uint8_t carry = ((registers[1] >> 4)& 0b1);
+    registers[0] -= (value + carry);
+
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+    if((value + carry) > initial) //(r8 + carry) > A
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    if ((initial & 0x0F) < ((value & 0x0F) + carry))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+    
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::SBC_n(int value)
+void CPU::SBC_n()
 {
+    uint8_t value = imm8();
     //Subtract the value in r8 and the carry flag from A.
     uint8_t initial = registers[0];
     uint8_t carry = ((registers[1] >> 4)& 0b1);
@@ -370,14 +533,58 @@ void CPU::SBC_n(int value)
 }
 void CPU::SBC()
 {
-    CPU::SBC_n(memory.read(getPair(6)));
+    uint8_t value = memory.read(getPair(6));
+    uint8_t initial = registers[0];
+    uint8_t carry = ((registers[1] >> 4)& 0b1);
+    registers[0] -= (value + carry);
+
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+    if((value + carry) > initial) //(r8 + carry) > A
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    if ((initial & 0x0F) < ((value & 0x0F) + carry))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+    
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::SUB_r(int src)
+void CPU::SUB_r()
 {
-    CPU::SUB_n(registers[src]);
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    uint8_t initial = registers[0];
+    registers[0] -= value;
+
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+    if(value > initial)
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    if ((initial & 0x0F) < (value & 0x0F))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+    
+    registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::SUB_n(int value)
+void CPU::SUB_n()
 {
+    uint8_t value = imm8();
     uint8_t initial = registers[0];
     registers[0] -= value;
 
@@ -402,7 +609,28 @@ void CPU::SUB_n(int value)
 }
 void CPU::SUB()
 {
-    CPU::SUB_n(memory.read(getPair(6)));
+    uint8_t value = memory.read(getPair(6));
+    uint8_t initial = registers[0];
+    registers[0] -= value;
+
+    if(registers[0] == 0)
+    {
+        registers[1] = 0b1100;  //zero bit
+    }
+    else
+    {
+        registers[1] = 0b0100;  //zero bit
+    }
+    if(value > initial)
+    {
+        registers[1] += 0b0001; //carry bit
+    }
+    if ((initial & 0x0F) < (value & 0x0F))
+    {
+        registers[1] += 0b0010; //half carry bit
+    }
+    
+    registers[1] = registers[1] << 4; //shift flags into place
 }
 
 //16-bit arithmetic instructions
