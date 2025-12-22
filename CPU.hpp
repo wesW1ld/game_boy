@@ -60,9 +60,9 @@ class CPU
         void SUB();                                                   // SUB A, [HL]
 
         //16-bit arithmetic instructions
-        void ADD_16(int src);                                        //ADD HL, r16
-        void DEC_16(int dest);
-        void INC_16(int dest);
+        void ADD_16();                                        //ADD HL, r16
+        void DEC_16();
+        void INC_16();
 
         //Bitwise logic instructions
         void AND_r(int src);                                        //AND A,r8

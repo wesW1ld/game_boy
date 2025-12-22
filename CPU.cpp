@@ -51,7 +51,7 @@ void CPU::LD_r8_n8()
 }
 void CPU::LD_r16_n16()
 {
-    int dest = getReg16((currentOpcode >> 4) & 0x0F);
+    int dest = getReg16((currentOpcode >> 4) & 0x03);
     uint16_t val = imm16();
 
     if(dest % 2 == 0)
@@ -80,7 +80,7 @@ void CPU::LD_r8_memHL()
 }
 void CPU::LD_mem_r16_A() //only BC and DE
 {
-    int dest = getReg16((currentOpcode >> 4) & 0x0F);
+    int dest = getReg16((currentOpcode >> 4) & 0x03);
     memory.write(getPair(dest), registers[0]);
 }
 void CPU::LD_mem_n16_A()
@@ -98,7 +98,7 @@ void CPU::LDH_mem_C_A()
 }
 void CPU::LD_A_mem_r16()
 {
-    int src = getReg16((currentOpcode >> 4) & 0x0F);
+    int src = getReg16((currentOpcode >> 4) & 0x03);
     registers[0] = memory.read(getPair(src));
 }
 void CPU::LD_A_mem_n16()
@@ -634,8 +634,9 @@ void CPU::SUB()
 }
 
 //16-bit arithmetic instructions
-void CPU::ADD_16(int src) //pass in first source
+void CPU::ADD_16() //pass in first source
 {
+    int src = getReg16((currentOpcode >> 4) & 0x03);
     uint16_t initial = getPair(6);
     uint16_t val = initial + getPair(src);
 
@@ -653,14 +654,16 @@ void CPU::ADD_16(int src) //pass in first source
         registers[1] |= 0x20; //half carry flag
     }
 }
-void CPU::DEC_16(int dest)
+void CPU::DEC_16()
 {
+    int dest = getReg16((currentOpcode >> 4) & 0x03);
     uint16_t val = getPair(dest) - 1;
     registers[dest] = static_cast<uint8_t>(val>>8);
     registers[dest+1] = static_cast<uint8_t>(val&0xFF);
 }
-void CPU::INC_16(int dest)
+void CPU::INC_16()
 {
+    int dest = getReg16((currentOpcode >> 4) & 0x03);
     uint16_t val = getPair(dest) + 1;
     registers[dest] = static_cast<uint8_t>(val>>8);
     registers[dest+1] = static_cast<uint8_t>(val&0xFF);
@@ -1028,7 +1031,22 @@ void CPU::SWAP_HL()
 //Stack manipulation instructions
 void CPU::ADD_fSP()
 {
-    CPU::ADD_16(8);
+    uint16_t initial = getPair(6);
+    uint16_t val = initial + getPair(8);
+
+    registers[6] = static_cast<uint8_t>(val>>8);//H
+    registers[7] = static_cast<uint8_t>(val&0xFF);//L
+
+    registers[1] = registers[1] & 0x80;
+    if(val < initial)
+    {
+        registers[1] |= 0x10; //carry flag
+    }
+
+    if(((((initial >> 8) & 0b1) + (((val - initial) >> 8) & 0b1))& 0b1) != ((val >> 8) & 0b1))
+    {
+        registers[1] |= 0x20; //half carry flag
+    }
 }
 void CPU::ADD_tSP(int8_t e8)
 {
@@ -1103,30 +1121,46 @@ void CPU::LD_fHL()
 void CPU::POPAF()
 {
     registers[1] = memory.read(getPair(8)); //LD F, [SP]
-    INC_16(8);
+    uint16_t val = getPair(8) + 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     registers[0] = memory.read(getPair(8)); //LD A, [SP]
-    INC_16(8);
+    val = getPair(8) + 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     registers[1] = registers[1] & 0xF0;
 }
 void CPU::POP(int dest)
 {
     registers[dest+1] = memory.read(getPair(8)); //LD C, E or L, [SP]
-    INC_16(8);
+    uint16_t val = getPair(8) + 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     registers[dest] = memory.read(getPair(8)); //LD B, D or H, [SP]
-    INC_16(8);
+    val = getPair(8) + 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
 }
 void CPU::PUSHAF()
 {
-    DEC_16(8);
+    uint16_t val = getPair(8) - 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     memory.write(getPair(8), registers[0]);
-    DEC_16(8);
+    val = getPair(8) - 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     memory.write(getPair(8), registers[1]);
 }
 void CPU::PUSH(int dest)
 {
-    DEC_16(8);
+    uint16_t val = getPair(8) - 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     memory.write(getPair(8), registers[dest]); //LD B, D or H, [SP]
-    DEC_16(8);
+    val = getPair(8) - 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
     memory.write(getPair(8), registers[dest + 1]); //LD C, E or L, [SP]
 }
 
