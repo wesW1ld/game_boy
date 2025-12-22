@@ -108,17 +108,17 @@ class CPU
 
         //Stack manipulation instructions
         void ADD_fSP();                                             //ADD HL,SP
-        void ADD_tSP(int8_t e8);                                    //ADD SP,e8
+        void ADD_tSP();                                    //ADD SP,e8
         void DEC_SP();                                              //DEC SP
         void INC_SP();                                              //INC SP
-        void LD_SP(uint16_t val);                                   // LD SP,n16
-        void LD_fSP(uint16_t address);                              // LD [n16],SP
-        void LD_HL(int8_t e8);                                      // LD HL,SP+e8
+        void LD_SP();                                   // LD SP,n16
+        void LD_fSP();                              // LD [n16],SP
+        void LD_HL();                                      // LD HL,SP+e8
         void LD_fHL();                                              // LD SP,HL
         void POPAF();                                               // POP AF
-        void POP(int dest);                                         // POP r16
+        void POP();                                         // POP r16
         void PUSHAF();                                              // PUSH AF
-        void PUSH(int dest);                                        // PUSH r16  
+        void PUSH();                                        // PUSH r16  
 
         //Jumps and subroutine instructions
         void CALL(uint16_t address);

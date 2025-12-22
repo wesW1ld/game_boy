@@ -1101,10 +1101,10 @@ void CPU::ADD_fSP()
         registers[1] |= 0x20; //half carry flag
     }
 }
-void CPU::ADD_tSP(int8_t e8)
+void CPU::ADD_tSP()
 {
     uint16_t initial = getPair(8);
-    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(e8));
+    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(imm8()));
 
     registers[8] = static_cast<uint8_t>(val>>8);
     registers[9] = static_cast<uint8_t>(val & 0xFF);
@@ -1134,22 +1134,24 @@ void CPU::INC_SP()
     registers[8] = static_cast<uint8_t>(val>>8);
     registers[9] = static_cast<uint8_t>(val & 0xFF);
 }
-void CPU::LD_SP(uint16_t val)
+void CPU::LD_SP()
 {
+    uint16_t val = imm16();
     registers[8] = static_cast<uint8_t>(val>>8);
     registers[9] = static_cast<uint8_t>(val & 0xFF);
 }
-void CPU::LD_fSP(uint16_t address)
+void CPU::LD_fSP()
 {
+    uint16_t address = imm16();
     uint16_t SP = getPair(8);
 
     memory.write(address, SP & 0xFF);
     memory.write(address + 1, SP>>8);
 }
-void CPU::LD_HL(int8_t e8)
+void CPU::LD_HL()
 {
     uint16_t initial = getPair(8);
-    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(e8));
+    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(imm8()));
 
     registers[6] = static_cast<uint8_t>(val>>8);
     registers[7] = static_cast<uint8_t>(val & 0xFF);
@@ -1183,8 +1185,9 @@ void CPU::POPAF()
     registers[9] = static_cast<uint8_t>(val&0xFF);
     registers[1] = registers[1] & 0xF0;
 }
-void CPU::POP(int dest)
+void CPU::POP()
 {
+    int dest = getReg16((currentOpcode >> 4) & 0x03);
     registers[dest+1] = memory.read(getPair(8)); //LD C, E or L, [SP]
     uint16_t val = getPair(8) + 1;
     registers[8] = static_cast<uint8_t>(val>>8);
@@ -1205,8 +1208,9 @@ void CPU::PUSHAF()
     registers[9] = static_cast<uint8_t>(val&0xFF);
     memory.write(getPair(8), registers[1]);
 }
-void CPU::PUSH(int dest)
+void CPU::PUSH()
 {
+    int dest = getReg16((currentOpcode >> 4) & 0x03);
     uint16_t val = getPair(8) - 1;
     registers[8] = static_cast<uint8_t>(val>>8);
     registers[9] = static_cast<uint8_t>(val&0xFF);
