@@ -121,8 +121,8 @@ class CPU
         void PUSH();                                        // PUSH r16  
 
         //Jumps and subroutine instructions
-        void CALL(uint16_t address);
-        void CALL(int cc, uint16_t address);
+        void CALL();
+        void CALLcc();
         void JPHL();
         void JP(uint16_t address);
         void JP(int cc, uint16_t address);
@@ -154,6 +154,7 @@ class CPU
     uint8_t imm8();
     uint16_t imm16();
     uint16_t PC();
+    void incPC(int i);
     Memory& memory;
 };
 

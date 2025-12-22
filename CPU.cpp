@@ -33,7 +33,7 @@ void CPU::step()
     //execute
 
 
-    //increase PC based on instruction.bytes
+    //increase PC based on instruction.bytes, not for CALL tho
     
 }
 
@@ -1222,41 +1222,58 @@ void CPU::PUSH()
 }
 
 //Jumps and subroutine instructions
-void CPU::CALL(uint16_t address)
+void CPU::CALL()
 {
-    PUSH(10);
-    JP(address);
+    uint16_t target = imm16();
+    uint16_t address = PC() + 3;
+    
+    //SP-1
+    uint16_t SP = getPair(8) - 1; 
+    registers[8] = static_cast<uint8_t>(SP>>8);
+    registers[9] = static_cast<uint8_t>(SP&0xFF);
+
+    //write address of next instruction to SP
+    memory.write(getPair(8), (address>>8)); //high byte
+
+    //SP-1
+    SP = getPair(8) - 1;
+    registers[8] = static_cast<uint8_t>(SP>>8);
+    registers[9] = static_cast<uint8_t>(SP&0xFF);
+
+    memory.write(getPair(8), (address & 0xFF)); //low byte
+
+    //set PC to imm16
+    registers[10] = static_cast<uint8_t>(target>>8);
+    registers[11] = static_cast<uint8_t>(target & 0xFF);
 }
-void CPU::CALL(int cc, uint16_t address) //cc 0=Z 1=NZ 2=C 3=NC
+void CPU::CALLcc() //cc 0=Z 1=NZ 2=C 3=NC
 {
+    int cc = ((currentOpcode >> 3) & 0x03);
     switch(cc)
     {
         case 0:
             if(registers[1] & 0x80) //if z is set
             {
-                CALL(address);
+                CALL();
             }
             break;
         case 1:
             if(!(registers[1] & 0x80)) //if z is not set
             {
-                CALL(address);
+                CALL();
             }
             break;
         case 2:
             if(registers[1] & 0x10) //if c is set
             {
-                CALL(address);
+                CALL();
             }
             break;
         case 3:
             if(!(registers[1] & 0x10)) //if c is not set
             {
-                CALL(address);
+                CALL();
             }
-            break;
-        default:
-            //error
             break;
     }
 }
@@ -1527,6 +1544,13 @@ uint16_t CPU::imm16()
 uint16_t CPU::PC()
 {
     return getPair(10);
+}
+void CPU::incPC(int i)
+{
+    int dest = PC();
+    uint16_t val = getPair(dest) + 1;
+    registers[dest] = static_cast<uint8_t>(val>>8);
+    registers[dest+1] = static_cast<uint8_t>(val&0xFF);
 }
 
 //"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L", "SP", "PC"
