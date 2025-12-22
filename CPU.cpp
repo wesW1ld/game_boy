@@ -812,8 +812,9 @@ void CPU::SET_HL()
 }
 
 //Bit shift instructions
-void CPU::RL_r(int src)
+void CPU::RL_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     int temp = ((registers[1] >> 4) & 0x01); //save C to temp
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] >> 3) & 0x10); //set C to bit 7
@@ -848,8 +849,9 @@ void CPU::RLA()
     registers[1] |= ((registers[0] >> 3) & 0x10); //set C to bit 7
     registers[0] = ((registers[0] << 1) | temp); //shift register and add old C
 }
-void CPU::RLC_r(int src)
+void CPU::RLC_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     int temp = ((registers[src] >> 7) & 0x01); //save top to temp
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] >> 3) & 0x10); //set C to bit 7
@@ -884,8 +886,9 @@ void CPU::RLCA()
     registers[1] |= ((registers[0] >> 3) & 0x10); //set C to bit 7
     registers[0] = ((registers[0] << 1) | temp); //shift register and add old top
 }
-void CPU::RR_r(int src)
+void CPU::RR_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     int temp = ((registers[1] << 3) & 0x80); //save C to temp
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 1
@@ -920,8 +923,9 @@ void CPU::RRA()
     registers[1] |= ((registers[0] << 4) & 0x10); //set C to bit 1
     registers[0] = ((registers[0] >> 1) | temp); //shift register and add old C
 }
-void CPU::RRC_r(int src)
+void CPU::RRC_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     int temp = ((registers[src] << 7) & 0x80); //save bottom to temp
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 0
@@ -956,8 +960,9 @@ void CPU::RRCA()
     registers[1] |= ((registers[0] << 4) & 0x10); //set C to bit 0
     registers[0] = ((registers[0] >> 1) | temp); //shift register and add old top
 }
-void CPU::SLA_r(int src)
+void CPU::SLA_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] >> 3) & 0x10); //set C to bit 7
     registers[src] = ((registers[src] << 1)); //shift register
@@ -983,8 +988,9 @@ void CPU::SLA_HL()
         registers[1] |= 0x80;
     }
 }
-void CPU::SRA_r(int src)
+void CPU::SRA_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     int temp = ((registers[src]) & 0x80); //save top to temp
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 0
@@ -1012,8 +1018,9 @@ void CPU::SRA_HL()
         registers[1] |= 0x80;
     }
 }
-void CPU::SRL_r(int src)
+void CPU::SRL_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     registers[1] = 0; //wipe flags
     registers[1] |= ((registers[src] << 4) & 0x10); //set C to bit 0
     registers[src] = ((registers[src] >> 1) & 0x7F); //shift register and add top
@@ -1039,8 +1046,9 @@ void CPU::SRL_HL()
         registers[1] |= 0x80;
     }
 }
-void CPU::SWAP_r(int src)
+void CPU::SWAP_r()
 {
+    int src = getReg(currentOpcode & 0x07);
     registers[1] = 0; //wipe flags
     if(registers[src] == 0)
     {

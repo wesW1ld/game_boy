@@ -85,25 +85,25 @@ class CPU
         void SET_HL();                                       // SET u3,[HL]
 
         //Bit shift instructions
-        void RL_r(int src);                                         // RL r8
+        void RL_r();                                         // RL r8
         void RL_HL();                                               // RL [HL]
         void RLA();                                                 // RLA
-        void RLC_r(int src);                                        // RLC r8
+        void RLC_r();                                        // RLC r8
         void RLC_HL();                                              // RLC [HL]
         void RLCA();                                                // RLCA
-        void RR_r(int src);                                         //above but right
+        void RR_r();                                         //above but right
         void RR_HL();
         void RRA();
-        void RRC_r(int src);
+        void RRC_r();
         void RRC_HL();
         void RRCA();
-        void SLA_r(int src);
+        void SLA_r();
         void SLA_HL();
-        void SRA_r(int src);
+        void SRA_r();
         void SRA_HL();
-        void SRL_r(int src);
+        void SRL_r();
         void SRL_HL();
-        void SWAP_r(int src);
+        void SWAP_r();
         void SWAP_HL();
 
         //Stack manipulation instructions
