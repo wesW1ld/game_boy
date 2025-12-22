@@ -765,17 +765,20 @@ void CPU::XOR_n()
 } 
 
 //Bit flag instructions
-void CPU::BIT_r(int bit, int src)
+void CPU::BIT_r()
 {
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    int bit = getReg((currentOpcode >> 3) & 0x07);
     registers[1] = registers[1] & 0x10;
     registers[1] += 0x20;
-    if(!(registers[src] & (1 << bit)))
+    if(!(value & (1 << bit)))
     {
         registers[1] += 0x80;
     }
 }
-void CPU::BIT_HL(int bit)
+void CPU::BIT_HL()
 {
+    int bit = getReg((currentOpcode >> 3) & 0x07);
     registers[1] = registers[1] & 0x10;
     registers[1] += 0x20;
     if(!(memory.read(getPair(6)) & (1 << bit)))
@@ -783,21 +786,27 @@ void CPU::BIT_HL(int bit)
         registers[1] += 0x80;
     }
 }
-void CPU::RES_r(int bit, int src)
+void CPU::RES_r()
 {
+    int src = getReg(currentOpcode & 0x07);
+    int bit = getReg((currentOpcode >> 3) & 0x07);
     registers[src] = registers[src] & (~(1 << bit));
 }
-void CPU::RES_HL(int bit)
+void CPU::RES_HL()
 {
+    int bit = getReg((currentOpcode >> 3) & 0x07);
     uint8_t value = memory.read(getPair(6)) & (~(1 << bit));
     memory.write(getPair(6), value);
 }
-void CPU::SET_r(int bit, int src)
+void CPU::SET_r()
 {
+    int src = getReg(currentOpcode & 0x07);
+    int bit = getReg((currentOpcode >> 3) & 0x07);
     registers[src] = registers[src] | (1 << bit);
 }
-void CPU::SET_HL(int bit)
+void CPU::SET_HL()
 {
+    int bit = getReg((currentOpcode >> 3) & 0x07);
     uint8_t value = memory.read(getPair(6)) | (1 << bit);
     memory.write(getPair(6), value);
 }

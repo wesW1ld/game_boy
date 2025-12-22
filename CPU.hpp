@@ -77,12 +77,12 @@ class CPU
         void XOR_n(); 
         
         //Bit flag instructions
-        void BIT_r(int bit, int src);                               // BIT u3,r8
-        void BIT_HL(int bit);                                       // BIT u3,[HL]
-        void RES_r(int bit, int src);                               // RES u3,r8
-        void RES_HL(int bit);                                       // RES u3,[HL]
-        void SET_r(int bit, int src);                               // SET u3,r8
-        void SET_HL(int bit);                                       // SET u3,[HL]
+        void BIT_r();                               // BIT u3,r8
+        void BIT_HL();                                       // BIT u3,[HL]
+        void RES_r();                               // RES u3,r8
+        void RES_HL();                                       // RES u3,[HL]
+        void SET_r();                               // SET u3,r8
+        void SET_HL();                                       // SET u3,[HL]
 
         //Bit shift instructions
         void RL_r(int src);                                         // RL r8
