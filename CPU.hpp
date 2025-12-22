@@ -65,16 +65,16 @@ class CPU
         void INC_16();
 
         //Bitwise logic instructions
-        void AND_r(int src);                                        //AND A,r8
+        void AND_r();                                        //AND A,r8
         void AND_HL();                                              //AND A,[HL]
-        void AND_n(int value);                                      //AND A,n8
+        void AND_n();                                      //AND A,n8
         void CPL();                                                 //not A
-        void OR_r(int src);                                         //OR A,r8
+        void OR_r();                                         //OR A,r8
         void OR_HL();                                               //OR A,[HL]
-        void OR_n(int value); 
-        void XOR_r(int src);                                       
+        void OR_n(); 
+        void XOR_r();                                       
         void XOR_HL();                                               
-        void XOR_n(int value); 
+        void XOR_n(); 
         
         //Bit flag instructions
         void BIT_r(int bit, int src);                               // BIT u3,r8

@@ -670,17 +670,29 @@ void CPU::INC_16()
 }
 
 //Bitwise logic instructions
-void CPU::AND_r(int src)
+void CPU::AND_r()
 {
-    CPU::AND_n(registers[src]);
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    registers[0] &= value;
+    registers[1] = 0x20;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
 }
 void CPU::AND_HL()
 {
-    CPU::AND_n(memory.read(getPair(6)));
-}
-void CPU::AND_n(int value)
-{
+    uint8_t value = memory.read(getPair(6));
     registers[0] &= value;
+    registers[1] = 0x20;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
+}
+void CPU::AND_n()
+{
+    registers[0] &= imm8();
     registers[1] = 0x20;
     if (registers[0] == 0)
     {
@@ -693,16 +705,9 @@ void CPU::CPL()
     registers[1] = registers[1] & 0x90;
     registers[1] += 0x60;
 }
-void CPU::OR_r(int src)
+void CPU::OR_r()
 {
-    CPU::OR_n(registers[src]);
-}
-void CPU::OR_HL()
-{
-    CPU::OR_n(memory.read(getPair(6)));
-}
-void CPU::OR_n(int value)
-{
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
     registers[0] |= value;
     registers[1] = 0;
     if (registers[0] == 0)
@@ -710,17 +715,48 @@ void CPU::OR_n(int value)
         registers[1] |= 0x80; // Z
     } 
 }
-void CPU::XOR_r(int src)
+void CPU::OR_HL()
 {
-    CPU::XOR_n(registers[src]);
+    uint8_t value = memory.read(getPair(6));
+    registers[0] |= value;
+    registers[1] = 0;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
+}
+void CPU::OR_n()
+{
+    registers[0] |= imm8();
+    registers[1] = 0;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
+}
+void CPU::XOR_r()
+{
+    uint8_t value = registers[getReg(currentOpcode & 0x07)];
+    registers[0] ^= value;
+    registers[1] = 0;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
 }                                       
 void CPU::XOR_HL()
 {
-    CPU::XOR_n(memory.read(getPair(6)));
-}                                              
-void CPU::XOR_n(int value)
-{
+    uint8_t value = memory.read(getPair(6));
     registers[0] ^= value;
+    registers[1] = 0;
+    if (registers[0] == 0)
+    {
+        registers[1] |= 0x80; // Z
+    } 
+}                                              
+void CPU::XOR_n()
+{
+    registers[0] ^= imm8();
     registers[1] = 0;
     if (registers[0] == 0)
     {
