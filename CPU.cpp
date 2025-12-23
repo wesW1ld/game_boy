@@ -1,5 +1,6 @@
 #include "CPU.hpp"
 #include "MEMORY.hpp"
+#include "OpcodeTable.hpp"
 #include <iostream>
 
 CPU::CPU(Memory& mem):memory(mem)
@@ -27,9 +28,15 @@ CPU::CPU(Memory& mem):memory(mem)
 
 void CPU::step()
 {
+    int cycles = 0;
     //fetch
+    memory.write(PC(), 0xD2);
     currentOpcode = memory.read(PC());
-
+    const Opcode& op = opcodeTable[currentOpcode];
+    std::cout << op.mnemonic << "\n";
+    (this->*op.func)();
+    incPC(op.bytes);
+    cycles += op.cycles;
     //execute
 
 
@@ -1554,6 +1561,7 @@ int CPU::getReg16(uint8_t reg)
             return 8;
             break;
     }
+    return -1;
 }
 
 uint8_t CPU::imm8()

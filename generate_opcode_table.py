@@ -4,6 +4,7 @@ with open("opcodes.json", "r") as f:
     opcodes = json.load(f)
 
 with open("OpcodeTable.hpp", "w") as f:
+    f.write("#pragma once\n")
     f.write("#include \"CPU.hpp\"\n\n")
     f.write("#include <iostream>\n\n")
     f.write("struct Opcode {\n")
@@ -13,7 +14,7 @@ with open("OpcodeTable.hpp", "w") as f:
     f.write("    const char* mnemonic;\n")
     f.write("};\n\n")
 
-    f.write("Opcode opcodeTable[512] = {\n")
+    f.write("inline constexpr Opcode opcodeTable[512] = {\n")
 
 
     for opcode in opcodes["unprefixed"]:
@@ -24,6 +25,7 @@ with open("OpcodeTable.hpp", "w") as f:
         func = mnemonic
         if((int(opcode, 16) >= 0x40) and (int(opcode, 16) <= 0x7F)):
             func = "LD_r8_r8"
+        func = "LD_r8_r8"
 
         f.write(f"    {{ &CPU::{func} , {bytes_}, {cycles}, \"{mnemonic}\" }},//{opcode}\n")
     for opcode in opcodes["cbprefixed"]:
@@ -32,6 +34,7 @@ with open("OpcodeTable.hpp", "w") as f:
         bytes_ = opcodes["cbprefixed"][opcode]["bytes"]
 
         func = mnemonic
+        func = "LD_r8_r8"
         if((int(opcode, 16) >= 0x40) and (int(opcode, 16) <= 0x7F)):
             func = "BIT_r"
         if((int(opcode, 16) >= 0x80) and (int(opcode, 16) <= 0xBF)):
