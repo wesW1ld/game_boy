@@ -1279,94 +1279,101 @@ void CPU::CALLcc() //cc 0=Z 1=NZ 2=C 3=NC
 }
 void CPU::JPHL()
 {
-    registers[10]= 6;
-    registers[11]= 7;
+    registers[10] = registers[6];
+    registers[11] = registers[7];
 }
-void CPU::JP(uint16_t address)
+void CPU::JP()
 {
+    uint16_t address = imm16();
     registers[10] = static_cast<uint8_t>(address>>8);
     registers[11] = static_cast<uint8_t>(address & 0xFF);
 }
-void CPU::JP(int cc, uint16_t address)
+void CPU::JPcc()
 {
+    int cc = ((currentOpcode >> 3) & 0x03);
     switch(cc)
     {
         case 0:
             if(registers[1] & 0x80) //if z is set
             {
-                JP(address);
+                JP();
             }
             break;
         case 1:
             if(!(registers[1] & 0x80)) //if z is not set
             {
-                JP(address);
+                JP();
             }
             break;
         case 2:
             if(registers[1] & 0x10) //if c is set
             {
-                JP(address);
+                JP();
             }
             break;
         case 3:
             if(!(registers[1] & 0x10)) //if c is not set
             {
-                JP(address);
+                JP();
             }
-            break;
-        default:
-            //error
             break;
     }
 }
-void CPU::JR(int8_t e8)
+void CPU::JR()
 {
+    int8_t e8 = static_cast<int8_t>(imm8());
     uint16_t initial = getPair(10);
-    uint16_t val = static_cast<uint16_t>(initial + static_cast<int16_t>(e8));
+    uint16_t val = static_cast<uint16_t>(static_cast<int16_t>(initial) + static_cast<int16_t>(e8));
 
     registers[10] = static_cast<uint8_t>(val>>8);
     registers[11] = static_cast<uint8_t>(val & 0xFF);
 }
-void CPU::JR(int cc, int8_t e8)
+void CPU::JRcc()
 {
+    int cc = ((currentOpcode >> 3) & 0x03);
     switch(cc)
     {
         case 0:
             if(registers[1] & 0x80) //if z is set
             {
-                JR(e8);
+                JR();
             }
             break;
         case 1:
             if(!(registers[1] & 0x80)) //if z is not set
             {
-                JR(e8);
+                JR();
             }
             break;
         case 2:
             if(registers[1] & 0x10) //if c is set
             {
-                JR(e8);
+                JR();
             }
             break;
         case 3:
             if(!(registers[1] & 0x10)) //if c is not set
             {
-                JR(e8);
+                JR();
             }
-            break;
-        default:
-            //error
             break;
     }
 }
 void CPU::RET()
 {
-    POP(10);
+    int dest = 10;
+    registers[dest+1] = memory.read(getPair(8)); //LD C, E or L, [SP]
+    uint16_t val = getPair(8) + 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
+    registers[dest] = memory.read(getPair(8)); //LD B, D or H, [SP]
+    val = getPair(8) + 1;
+    registers[8] = static_cast<uint8_t>(val>>8);
+    registers[9] = static_cast<uint8_t>(val&0xFF);
 }
-void CPU::RET(int cc)
+void CPU::RETcc()
 {
+    int cc = ((currentOpcode >> 3) & 0x03);
     switch(cc)
     {
         case 0:
@@ -1392,9 +1399,6 @@ void CPU::RET(int cc)
             {
                 RET();
             }
-            break;
-        default:
-            //error
             break;
     }
 }
@@ -1403,9 +1407,29 @@ void CPU::RETI()
     EI();
     RET();
 }
-void CPU::RST(uint8_t vec)
+void CPU::RST()
 {
-    PUSH(10);
+    uint8_t vec = ((currentOpcode >> 3) & 0x07);
+
+    //call code
+    uint16_t address = PC() + 3;
+    
+    //SP-1
+    uint16_t SP = getPair(8) - 1; 
+    registers[8] = static_cast<uint8_t>(SP>>8);
+    registers[9] = static_cast<uint8_t>(SP&0xFF);
+
+    //write address of next instruction to SP
+    memory.write(getPair(8), (address>>8)); //high byte
+
+    //SP-1
+    SP = getPair(8) - 1;
+    registers[8] = static_cast<uint8_t>(SP>>8);
+    registers[9] = static_cast<uint8_t>(SP&0xFF);
+
+    memory.write(getPair(8), (address & 0xFF)); //low byte
+
+    //set PC to vec
     registers[10] = 0x00;
     registers[11] = vec;
 }

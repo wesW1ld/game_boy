@@ -124,14 +124,14 @@ class CPU
         void CALL();
         void CALLcc();
         void JPHL();
-        void JP(uint16_t address);
-        void JP(int cc, uint16_t address);
-        void JR(int8_t e8);
-        void JR(int cc, int8_t e8);
-        void RET(int cc);
+        void JP();
+        void JPcc();
+        void JR();
+        void JRcc();
+        void RETcc();
         void RET();
         void RETI();
-        void RST(uint8_t vec);
+        void RST();
 
         //Interrupt-related instructions
         void DI();
