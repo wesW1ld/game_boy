@@ -22,15 +22,18 @@ with open("OpcodeTable.hpp", "w") as f:
         cycles = opcodes["unprefixed"][opcode]["cycles"][0]
         bytes_ = opcodes["unprefixed"][opcode]["bytes"]
 
+        #functions
         func = mnemonic
         func = "NOP"
         if((int(opcode, 16) >= 0x40) and (int(opcode, 16) <= 0x7F)):
             func = "LD_r8_r8"
+            if((int(opcode, 16) % 0x08) == 0x06): #HL's
+                    func = func[:-2] + "memHL"
         funcs = ["ADD_r", "ADC_r", "SUB_r", "SBC_r", "AND_r", "XOR_r", "OR_r", "CP_r"]
         for i in range(0x80, 0xC0, 0x08):
             if((int(opcode, 16) >= i) and (int(opcode, 16) <= i + 0x07)):
                 func = funcs[(i - 0x80) // 0x08]
-                if((int(opcode, 16) % 0x08) == 0x06):
+                if((int(opcode, 16) % 0x08) == 0x06): #HL's
                     func = func[:-1] + "HL"
                 break
 
@@ -40,6 +43,7 @@ with open("OpcodeTable.hpp", "w") as f:
         cycles = opcodes["cbprefixed"][opcode]["cycles"][0]
         bytes_ = opcodes["cbprefixed"][opcode]["bytes"]
 
+        #functions
         func = mnemonic
         func = "NOP"
         if((int(opcode, 16) >= 0x40) and (int(opcode, 16) <= 0x7F)):
@@ -53,7 +57,7 @@ with open("OpcodeTable.hpp", "w") as f:
             if((int(opcode, 16) >= i) and (int(opcode, 16) <= i + 0x07)):
                 func = funcs[i // 0x08]
                 break
-        if((int(opcode, 16) % 0x08) == 0x06):
+        if((int(opcode, 16) % 0x08) == 0x06): #HL's
                     func = func[:-1] + "HL"
 
         f.write(f"    {{ &CPU::{func} , {bytes_}, {cycles}, \"{mnemonic}\" }},//{opcode}\n")
