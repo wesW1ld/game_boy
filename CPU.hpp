@@ -41,23 +41,23 @@ class CPU
         //8-bit arithmetic instructions
         void ADC_r();                                          // ADC A, r8
         void ADC_n();                                        // ADC A, n8
-        void ADC();                                                   // ADC A, [HL]
+        void ADC_HL();                                                   // ADC A, [HL]
         void ADD_r();                                          // ADD A, r8
         void ADD_n();                                        // ADD A, n8
-        void ADD();                                                   // ADD A, [HL]
+        void ADD_HL();                                                   // ADD A, [HL]
         void CP_r();                                           // CP A,r8
         void CP_n();                                         // CP A,n8
-        void CP();                                                    // CP A,[HL]
+        void CP_HL();                                                    // CP A,[HL]
         void DEC_r();                                          // DEC r8
         void DEC();                                                   // DEC [HL]
         void INC_r();                                          // INC r8
         void INC();                                                   // INC [HL]
         void SBC_r();                                          // SBC A, r8
         void SBC_n();                                        // SBC A, n8
-        void SBC();                                                   // SBC A, [HL]
+        void SBC_HL();                                                   // SBC A, [HL]
         void SUB_r();                                          // SUB A, r8
         void SUB_n();                                        // SUB A, n8
-        void SUB();                                                   // SUB A, [HL]
+        void SUB_HL();                                                   // SUB A, [HL]
 
         //16-bit arithmetic instructions
         void ADD_16();                                        //ADD HL, r16

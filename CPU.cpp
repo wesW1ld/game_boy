@@ -225,7 +225,7 @@ void CPU::ADC_n()
 
     registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::ADC()
+void CPU::ADC_HL()
 {
     uint8_t value = memory.read(getPair(6));
     uint8_t initial = registers[0];
@@ -300,7 +300,7 @@ void CPU::ADD_n()
 
     registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::ADD()
+void CPU::ADD_HL()
 {
     uint8_t value = memory.read(getPair(6));
     uint8_t initial = registers[0];
@@ -384,7 +384,7 @@ void CPU::CP_n() //add a value ahead to carry from on A, still a problem if valu
 
     registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::CP()
+void CPU::CP_HL()
 {
     uint8_t value = memory.read(getPair(6));
     uint8_t initial = registers[0];
@@ -538,7 +538,7 @@ void CPU::SBC_n()
     
     registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::SBC()
+void CPU::SBC_HL()
 {
     uint8_t value = memory.read(getPair(6));
     uint8_t initial = registers[0];
@@ -614,7 +614,7 @@ void CPU::SUB_n()
     
     registers[1] = registers[1] << 4; //shift flags into place
 }
-void CPU::SUB()
+void CPU::SUB_HL()
 {
     uint8_t value = memory.read(getPair(6));
     uint8_t initial = registers[0];

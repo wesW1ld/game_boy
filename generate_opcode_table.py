@@ -23,9 +23,16 @@ with open("OpcodeTable.hpp", "w") as f:
         bytes_ = opcodes["unprefixed"][opcode]["bytes"]
 
         func = mnemonic
+        func = "NOP"
         if((int(opcode, 16) >= 0x40) and (int(opcode, 16) <= 0x7F)):
             func = "LD_r8_r8"
-        func = "LD_r8_r8"
+        funcs = ["ADD_r", "ADC_r", "SUB_r", "SBC_r", "AND_r", "XOR_r", "OR_r", "CP_r"]
+        for i in range(0x80, 0xC0, 0x08):
+            if((int(opcode, 16) >= i) and (int(opcode, 16) <= i + 0x07)):
+                func = funcs[(i - 0x80) // 0x08]
+                if((int(opcode, 16) % 0x08) == 0x06):
+                    func = func[:-1] + "HL"
+                break
 
         f.write(f"    {{ &CPU::{func} , {bytes_}, {cycles}, \"{mnemonic}\" }},//{opcode}\n")
     for opcode in opcodes["cbprefixed"]:
@@ -34,16 +41,21 @@ with open("OpcodeTable.hpp", "w") as f:
         bytes_ = opcodes["cbprefixed"][opcode]["bytes"]
 
         func = mnemonic
-        func = "LD_r8_r8"
+        func = "NOP"
         if((int(opcode, 16) >= 0x40) and (int(opcode, 16) <= 0x7F)):
             func = "BIT_r"
         if((int(opcode, 16) >= 0x80) and (int(opcode, 16) <= 0xBF)):
             func = "RES_r"
         if((int(opcode, 16) >= 0xC0) and (int(opcode, 16) <= 0xFF)):
             func = "SET_r"
+        funcs = ["RLC_r", "RRC_r", "RL_r", "RR_r", "SLA_r", "SRA_r", "SWAP_r", "SRL_r"]
+        for i in range(0x00, 0x40, 0x08):
+            if((int(opcode, 16) >= i) and (int(opcode, 16) <= i + 0x07)):
+                func = funcs[i // 0x08]
+                break
+        if((int(opcode, 16) % 0x08) == 0x06):
+                    func = func[:-1] + "HL"
 
         f.write(f"    {{ &CPU::{func} , {bytes_}, {cycles}, \"{mnemonic}\" }},//{opcode}\n")
 
     f.write("};\n")
-
-#above otimizations saves about 256 entries(HALF!!!) from being manually typed
