@@ -22,6 +22,7 @@ class CPU
         CPU(Memory& mem);
 
         void step();
+        void readInputFile();
 
         //load instructions
         void LD_r8_r8();                             // LD r8, r8

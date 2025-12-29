@@ -2,6 +2,9 @@
 #include "MEMORY.hpp"
 #include "OpcodeTable.hpp"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
 
 CPU::CPU(Memory& mem):memory(mem)
 // for f:
@@ -56,15 +59,16 @@ void CPU::step()
         doIME = true;
     }
 
+    uint16_t oldPC = PC();
+
     //fetch
-    memory.write(PC(), 0xD2);
+    //memory.write(PC(), 0xD2); //runs instruction written
     currentOpcode = memory.read(PC());
     const Opcode& op = opcodeTable[currentOpcode];
-    std::cout << op.mnemonic << "\n";
-    (this->*op.func)();
-    incPC(op.bytes);
-    cycles += op.cycles;
+
     //execute
+    (this->*op.func)();
+    cycles += op.cycles;
 
     if(haltBug && !haltBugSetThisCycle)
     {
@@ -73,13 +77,57 @@ void CPU::step()
     else
     {
         haltBugSetThisCycle = false;
-        //increase PC based on instruction.bytes, not for CALL tho
+        //increase PC based on instruction.bytes if function doesn't set it
+        if(PC() == oldPC)
+        {
+            incPC(op.bytes);
+        }
+        
     }
     
     if(doIME)
     {
         IME = true;
     }
+}
+
+void CPU::readInputFile()
+{
+    std::ifstream ifile("input.txt");
+
+    if(!ifile.is_open()) 
+    {
+        std::cout << "input file failed to open\n";
+        return;
+    }
+
+    uint16_t y = PC();
+    std::string line;
+    while(std::getline(ifile, line)) 
+    {
+        line = "0x" + line;
+        uint8_t x = static_cast<uint8_t>(std::stoi(line, nullptr, 16));
+        memory.write(y, x);
+        y++;
+    }
+
+    // testing
+    // std::ofstream ofile("output.txt");
+    // if(!ofile.is_open()) 
+    // {
+    //     std::cout << "output file failed to open\n";
+    //     return;
+    // }
+    // y--;
+    // while(y != PC())
+    // {
+    //     ofile << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(memory.read(y)) << "\n";
+    //     y--;
+    // }
+    // ofile << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(memory.read(y)) << "\n";
+    // ofile.close();
+
+    ifile.close();
 }
 
 //load instructions
