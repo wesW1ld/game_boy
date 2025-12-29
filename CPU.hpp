@@ -12,7 +12,12 @@ class CPU
         uint8_t registers[12];
         bool IME;  // Interrupt Master Enable flag
         bool pendingEnableIME; // EI sets this, IME becomes true next instruction 
+        bool halted;
+        bool stopped;
+        int cycles;
         uint8_t currentOpcode;  
+        bool haltBug;
+        bool haltBugSetThisCycle;
 
         CPU(Memory& mem);
 
@@ -155,6 +160,8 @@ class CPU
     uint16_t imm16();
     uint16_t PC();
     void incPC(int i);
+    uint8_t IE();
+    uint8_t IF();
     Memory& memory;
 };
 

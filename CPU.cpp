@@ -24,11 +24,38 @@ CPU::CPU(Memory& mem):memory(mem)
 
     IME = false;
     pendingEnableIME = false;
+    halted = false;
+    stopped = false;
+    cycles = 0;
+    haltBug = false;
+    haltBugSetThisCycle = false;
 }
 
 void CPU::step()
 {
-    int cycles = 0;
+    //halt and stop checks
+    if(stopped)
+    {
+        return;
+    }
+    if(halted) //not halt bug
+    {
+        cycles += 4;
+
+        if ((IF() & IE()))
+        {
+            halted = false;
+        }
+
+        return;
+    }
+    bool doIME = false;
+    if(pendingEnableIME)
+    {
+        pendingEnableIME = false;
+        doIME = true;
+    }
+
     //fetch
     memory.write(PC(), 0xD2);
     currentOpcode = memory.read(PC());
@@ -39,9 +66,20 @@ void CPU::step()
     cycles += op.cycles;
     //execute
 
-
-    //increase PC based on instruction.bytes, not for CALL tho
+    if(haltBug && !haltBugSetThisCycle)
+    {
+        haltBug = false;
+    }
+    else
+    {
+        haltBugSetThisCycle = false;
+        //increase PC based on instruction.bytes, not for CALL tho
+    }
     
+    if(doIME)
+    {
+        IME = true;
+    }
 }
 
 //load instructions
@@ -1450,6 +1488,16 @@ void CPU::EI()
 {
     pendingEnableIME = true;
 }
+void CPU::HALT()
+{
+    halted = true;
+    if(((IE() & IF()) != 0) && !IME) //halt bug case
+    {
+        haltBug = true;
+        halted = false;
+        haltBugSetThisCycle = true;
+    }
+}
 
 //Carry flag instructions
 void CPU::CCF()
@@ -1501,6 +1549,10 @@ void CPU::DAA()
     registers[1] &= 0b11010000;
 }
 void CPU::NOP(){}
+void CPU::STOP()
+{
+    stopped = true;
+}
 
 uint16_t CPU::getPair(int firstAdress) //TODO: stop code on error
 {
@@ -1583,6 +1635,15 @@ void CPU::incPC(int i)
     uint16_t val = getPair(dest) + 1;
     registers[dest] = static_cast<uint8_t>(val>>8);
     registers[dest+1] = static_cast<uint8_t>(val&0xFF);
+}
+
+uint8_t CPU::IE()
+{
+    return memory.read(0xFFFF);
+}
+uint8_t CPU::IF()
+{
+    return memory.read(0xFF0F);
 }
 
 //"$A", "$F", "$B", "$C", "$D", "$E", "$H", "$L", "SP", "PC"
