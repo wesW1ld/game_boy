@@ -24,6 +24,8 @@ class CPU
         void step();
         void readInputFile();
 
+        uint16_t PC();
+
         //load instructions
         void LD_r8_r8();                             // LD r8, r8
         void LD_r8_n8();                         // LD r8, n8
@@ -159,7 +161,6 @@ class CPU
     int getReg16(uint8_t reg);
     uint8_t imm8();
     uint16_t imm16();
-    uint16_t PC();
     void incPC(int i);
     uint8_t IE();
     uint8_t IF();

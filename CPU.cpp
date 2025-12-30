@@ -1679,10 +1679,9 @@ uint16_t CPU::PC()
 }
 void CPU::incPC(int i)
 {
-    int dest = PC();
-    uint16_t val = getPair(dest) + 1;
-    registers[dest] = static_cast<uint8_t>(val>>8);
-    registers[dest+1] = static_cast<uint8_t>(val&0xFF);
+    uint16_t val = getPair(10) + i;
+    registers[10] = static_cast<uint8_t>(val>>8);
+    registers[11] = static_cast<uint8_t>(val&0xFF);
 }
 
 uint8_t CPU::IE()
