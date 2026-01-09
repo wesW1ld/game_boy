@@ -14,67 +14,67 @@ inline constexpr Opcode opcodeTable[512] = {
     { &CPU::NOP , 1, 4, "NOP" },//0x00
     { &CPU::LD_r16_n16 , 3, 12, "LD" },//0x01
     { &CPU::LD_mem_r16_A , 1, 8, "LD" },//0x02
-    { &CPU::NOP , 1, 8, "INC" },//0x03
-    { &CPU::NOP , 1, 4, "INC" },//0x04
-    { &CPU::NOP , 1, 4, "DEC" },//0x05
+    { &CPU::INC_16 , 1, 8, "INC" },//0x03
+    { &CPU::INC_r , 1, 4, "INC" },//0x04
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x05
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x06
-    { &CPU::NOP , 1, 4, "RLCA" },//0x07
+    { &CPU::RLCA , 1, 4, "RLCA" },//0x07
     { &CPU::LD_fSP , 3, 20, "LD" },//0x08
-    { &CPU::NOP , 1, 8, "ADD" },//0x09
+    { &CPU::ADD_16 , 1, 8, "ADD" },//0x09
     { &CPU::LD_A_mem_r16 , 1, 8, "LD" },//0x0A
-    { &CPU::NOP , 1, 8, "DEC" },//0x0B
-    { &CPU::NOP , 1, 4, "INC" },//0x0C
-    { &CPU::NOP , 1, 4, "DEC" },//0x0D
+    { &CPU::DEC_16 , 1, 8, "DEC" },//0x0B
+    { &CPU::INC_r , 1, 4, "INC" },//0x0C
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x0D
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x0E
-    { &CPU::NOP , 1, 4, "RRCA" },//0x0F
-    { &CPU::NOP , 2, 4, "STOP" },//0x10
+    { &CPU::RRCA , 1, 4, "RRCA" },//0x0F
+    { &CPU::STOP , 2, 4, "STOP" },//0x10
     { &CPU::LD_r16_n16 , 3, 12, "LD" },//0x11
     { &CPU::LD_mem_r16_A , 1, 8, "LD" },//0x12
-    { &CPU::NOP , 1, 8, "INC" },//0x13
-    { &CPU::NOP , 1, 4, "INC" },//0x14
-    { &CPU::NOP , 1, 4, "DEC" },//0x15
+    { &CPU::INC_16 , 1, 8, "INC" },//0x13
+    { &CPU::INC_r , 1, 4, "INC" },//0x14
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x15
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x16
-    { &CPU::NOP , 1, 4, "RLA" },//0x17
-    { &CPU::NOP , 2, 12, "JR" },//0x18
-    { &CPU::NOP , 1, 8, "ADD" },//0x19
+    { &CPU::RLA , 1, 4, "RLA" },//0x17
+    { &CPU::JR , 2, 12, "JR" },//0x18
+    { &CPU::ADD_16 , 1, 8, "ADD" },//0x19
     { &CPU::LD_A_mem_r16 , 1, 8, "LD" },//0x1A
-    { &CPU::NOP , 1, 8, "DEC" },//0x1B
-    { &CPU::NOP , 1, 4, "INC" },//0x1C
-    { &CPU::NOP , 1, 4, "DEC" },//0x1D
+    { &CPU::DEC_16 , 1, 8, "DEC" },//0x1B
+    { &CPU::INC_r , 1, 4, "INC" },//0x1C
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x1D
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x1E
-    { &CPU::NOP , 1, 4, "RRA" },//0x1F
-    { &CPU::NOP , 2, 12, "JR" },//0x20
+    { &CPU::RRA , 1, 4, "RRA" },//0x1F
+    { &CPU::JRcc , 2, 12, "JR" },//0x20
     { &CPU::LD_r16_n16 , 3, 12, "LD" },//0x21
     { &CPU::LD_mem_HLI_A , 1, 8, "LD" },//0x22
-    { &CPU::NOP , 1, 8, "INC" },//0x23
-    { &CPU::NOP , 1, 4, "INC" },//0x24
-    { &CPU::NOP , 1, 4, "DEC" },//0x25
+    { &CPU::INC_16 , 1, 8, "INC" },//0x23
+    { &CPU::INC_r , 1, 4, "INC" },//0x24
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x25
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x26
-    { &CPU::NOP , 1, 4, "DAA" },//0x27
-    { &CPU::NOP , 2, 12, "JR" },//0x28
-    { &CPU::NOP , 1, 8, "ADD" },//0x29
+    { &CPU::DAA , 1, 4, "DAA" },//0x27
+    { &CPU::JRcc , 2, 12, "JR" },//0x28
+    { &CPU::ADD_16 , 1, 8, "ADD" },//0x29
     { &CPU::LD_A_mem_HLI , 1, 8, "LD" },//0x2A
-    { &CPU::NOP , 1, 8, "DEC" },//0x2B
-    { &CPU::NOP , 1, 4, "INC" },//0x2C
-    { &CPU::NOP , 1, 4, "DEC" },//0x2D
+    { &CPU::DEC_16 , 1, 8, "DEC" },//0x2B
+    { &CPU::INC_r , 1, 4, "INC" },//0x2C
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x2D
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x2E
-    { &CPU::NOP , 1, 4, "CPL" },//0x2F
-    { &CPU::NOP , 2, 12, "JR" },//0x30
+    { &CPU::CPL , 1, 4, "CPL" },//0x2F
+    { &CPU::JRcc , 2, 12, "JR" },//0x30
     { &CPU::LD_SP , 3, 12, "LD" },//0x31
     { &CPU::LD_mem_HLD_A , 1, 8, "LD" },//0x32
-    { &CPU::NOP , 1, 8, "INC" },//0x33
-    { &CPU::NOP , 1, 12, "INC" },//0x34
-    { &CPU::NOP , 1, 12, "DEC" },//0x35
+    { &CPU::INC_16 , 1, 8, "INC" },//0x33
+    { &CPU::INC , 1, 12, "INC" },//0x34
+    { &CPU::DEC , 1, 12, "DEC" },//0x35
     { &CPU::LD_memHL_n8 , 2, 12, "LD" },//0x36
-    { &CPU::NOP , 1, 4, "SCF" },//0x37
-    { &CPU::NOP , 2, 12, "JR" },//0x38
-    { &CPU::NOP , 1, 8, "ADD" },//0x39
+    { &CPU::SCF , 1, 4, "SCF" },//0x37
+    { &CPU::JRcc , 2, 12, "JR" },//0x38
+    { &CPU::ADD_fSP , 1, 8, "ADD" },//0x39
     { &CPU::LD_A_mem_HLD , 1, 8, "LD" },//0x3A
-    { &CPU::NOP , 1, 8, "DEC" },//0x3B
-    { &CPU::NOP , 1, 4, "INC" },//0x3C
-    { &CPU::NOP , 1, 4, "DEC" },//0x3D
+    { &CPU::DEC_16 , 1, 8, "DEC" },//0x3B
+    { &CPU::INC_r , 1, 4, "INC" },//0x3C
+    { &CPU::DEC_r , 1, 4, "DEC" },//0x3D
     { &CPU::LD_r8_n8 , 2, 8, "LD" },//0x3E
-    { &CPU::NOP , 1, 4, "CCF" },//0x3F
+    { &CPU::CCF , 1, 4, "CCF" },//0x3F
     { &CPU::LD_r8_r8 , 1, 4, "LD" },//0x40
     { &CPU::LD_r8_r8 , 1, 4, "LD" },//0x41
     { &CPU::LD_r8_r8 , 1, 4, "LD" },//0x42
@@ -203,70 +203,70 @@ inline constexpr Opcode opcodeTable[512] = {
     { &CPU::CP_r , 1, 4, "CP" },//0xBD
     { &CPU::CP_HL , 1, 8, "CP" },//0xBE
     { &CPU::CP_r , 1, 4, "CP" },//0xBF
-    { &CPU::NOP , 1, 20, "RET" },//0xC0
-    { &CPU::NOP , 1, 12, "POP" },//0xC1
-    { &CPU::NOP , 3, 16, "JP" },//0xC2
-    { &CPU::NOP , 3, 16, "JP" },//0xC3
-    { &CPU::NOP , 3, 24, "CALL" },//0xC4
-    { &CPU::NOP , 1, 16, "PUSH" },//0xC5
-    { &CPU::NOP , 2, 8, "ADD" },//0xC6
-    { &CPU::NOP , 1, 16, "RST" },//0xC7
-    { &CPU::NOP , 1, 20, "RET" },//0xC8
-    { &CPU::NOP , 1, 16, "RET" },//0xC9
-    { &CPU::NOP , 3, 16, "JP" },//0xCA
+    { &CPU::RETcc , 1, 20, "RET" },//0xC0
+    { &CPU::POP , 1, 12, "POP" },//0xC1
+    { &CPU::JPcc , 3, 16, "JP" },//0xC2
+    { &CPU::JP , 3, 16, "JP" },//0xC3
+    { &CPU::CALLcc , 3, 24, "CALL" },//0xC4
+    { &CPU::PUSH , 1, 16, "PUSH" },//0xC5
+    { &CPU::ADD_n , 2, 8, "ADD" },//0xC6
+    { &CPU::RST , 1, 16, "RST" },//0xC7
+    { &CPU::RETcc , 1, 20, "RET" },//0xC8
+    { &CPU::RET , 1, 16, "RET" },//0xC9
+    { &CPU::JPcc , 3, 16, "JP" },//0xCA
     { &CPU::NOP , 1, 4, "PREFIX" },//0xCB
-    { &CPU::NOP , 3, 24, "CALL" },//0xCC
-    { &CPU::NOP , 3, 24, "CALL" },//0xCD
-    { &CPU::NOP , 2, 8, "ADC" },//0xCE
-    { &CPU::NOP , 1, 16, "RST" },//0xCF
-    { &CPU::NOP , 1, 20, "RET" },//0xD0
-    { &CPU::NOP , 1, 12, "POP" },//0xD1
-    { &CPU::NOP , 3, 16, "JP" },//0xD2
+    { &CPU::CALLcc , 3, 24, "CALL" },//0xCC
+    { &CPU::CALL , 3, 24, "CALL" },//0xCD
+    { &CPU::ADC_n , 2, 8, "ADC" },//0xCE
+    { &CPU::RST , 1, 16, "RST" },//0xCF
+    { &CPU::RETcc , 1, 20, "RET" },//0xD0
+    { &CPU::POP , 1, 12, "POP" },//0xD1
+    { &CPU::JPcc , 3, 16, "JP" },//0xD2
     { &CPU::NOP , 1, 4, "ILLEGAL_D3" },//0xD3
-    { &CPU::NOP , 3, 24, "CALL" },//0xD4
-    { &CPU::NOP , 1, 16, "PUSH" },//0xD5
-    { &CPU::NOP , 2, 8, "SUB" },//0xD6
-    { &CPU::NOP , 1, 16, "RST" },//0xD7
-    { &CPU::NOP , 1, 20, "RET" },//0xD8
-    { &CPU::NOP , 1, 16, "RETI" },//0xD9
-    { &CPU::NOP , 3, 16, "JP" },//0xDA
+    { &CPU::CALLcc , 3, 24, "CALL" },//0xD4
+    { &CPU::PUSH , 1, 16, "PUSH" },//0xD5
+    { &CPU::SUB_n , 2, 8, "SUB" },//0xD6
+    { &CPU::RST , 1, 16, "RST" },//0xD7
+    { &CPU::RETcc , 1, 20, "RET" },//0xD8
+    { &CPU::RETI , 1, 16, "RETI" },//0xD9
+    { &CPU::JPcc , 3, 16, "JP" },//0xDA
     { &CPU::NOP , 1, 4, "ILLEGAL_DB" },//0xDB
-    { &CPU::NOP , 3, 24, "CALL" },//0xDC
+    { &CPU::CALLcc , 3, 24, "CALL" },//0xDC
     { &CPU::NOP , 1, 4, "ILLEGAL_DD" },//0xDD
-    { &CPU::NOP , 2, 8, "SBC" },//0xDE
-    { &CPU::NOP , 1, 16, "RST" },//0xDF
+    { &CPU::SBC_n , 2, 8, "SBC" },//0xDE
+    { &CPU::RST , 1, 16, "RST" },//0xDF
     { &CPU::LDH_mem_n16_A , 2, 12, "LDH" },//0xE0
-    { &CPU::NOP , 1, 12, "POP" },//0xE1
+    { &CPU::POP , 1, 12, "POP" },//0xE1
     { &CPU::LDH_mem_C_A , 1, 8, "LDH" },//0xE2
     { &CPU::NOP , 1, 4, "ILLEGAL_E3" },//0xE3
     { &CPU::NOP , 1, 4, "ILLEGAL_E4" },//0xE4
-    { &CPU::NOP , 1, 16, "PUSH" },//0xE5
-    { &CPU::NOP , 2, 8, "AND" },//0xE6
-    { &CPU::NOP , 1, 16, "RST" },//0xE7
-    { &CPU::NOP , 2, 16, "ADD" },//0xE8
-    { &CPU::NOP , 1, 4, "JP" },//0xE9
+    { &CPU::PUSH , 1, 16, "PUSH" },//0xE5
+    { &CPU::AND_n , 2, 8, "AND" },//0xE6
+    { &CPU::RST , 1, 16, "RST" },//0xE7
+    { &CPU::ADD_tSP , 2, 16, "ADD" },//0xE8
+    { &CPU::JPHL , 1, 4, "JP" },//0xE9
     { &CPU::LD_mem_n16_A , 3, 16, "LD" },//0xEA
     { &CPU::NOP , 1, 4, "ILLEGAL_EB" },//0xEB
     { &CPU::NOP , 1, 4, "ILLEGAL_EC" },//0xEC
     { &CPU::NOP , 1, 4, "ILLEGAL_ED" },//0xED
-    { &CPU::NOP , 2, 8, "XOR" },//0xEE
-    { &CPU::NOP , 1, 16, "RST" },//0xEF
+    { &CPU::XOR_n , 2, 8, "XOR" },//0xEE
+    { &CPU::RST , 1, 16, "RST" },//0xEF
     { &CPU::LDH_A_mem_n16 , 2, 12, "LDH" },//0xF0
-    { &CPU::NOP , 1, 12, "POP" },//0xF1
+    { &CPU::POPAF , 1, 12, "POP" },//0xF1
     { &CPU::LDH_A_mem_C , 1, 8, "LDH" },//0xF2
-    { &CPU::NOP , 1, 4, "DI" },//0xF3
+    { &CPU::DI , 1, 4, "DI" },//0xF3
     { &CPU::NOP , 1, 4, "ILLEGAL_F4" },//0xF4
-    { &CPU::NOP , 1, 16, "PUSH" },//0xF5
-    { &CPU::NOP , 2, 8, "OR" },//0xF6
-    { &CPU::NOP , 1, 16, "RST" },//0xF7
+    { &CPU::PUSHAF , 1, 16, "PUSH" },//0xF5
+    { &CPU::OR_n , 2, 8, "OR" },//0xF6
+    { &CPU::RST , 1, 16, "RST" },//0xF7
     { &CPU::LD_HL , 2, 12, "LD" },//0xF8
     { &CPU::LD_fHL , 1, 8, "LD" },//0xF9
     { &CPU::LD_A_mem_n16 , 3, 16, "LD" },//0xFA
-    { &CPU::NOP , 1, 4, "EI" },//0xFB
+    { &CPU::EI , 1, 4, "EI" },//0xFB
     { &CPU::NOP , 1, 4, "ILLEGAL_FC" },//0xFC
     { &CPU::NOP , 1, 4, "ILLEGAL_FD" },//0xFD
-    { &CPU::NOP , 2, 8, "CP" },//0xFE
-    { &CPU::NOP , 1, 16, "RST" },//0xFF
+    { &CPU::CP_n , 2, 8, "CP" },//0xFE
+    { &CPU::RST , 1, 16, "RST" },//0xFF
     { &CPU::RLC_r , 2, 8, "RLC" },//0x00
     { &CPU::RLC_r , 2, 8, "RLC" },//0x01
     { &CPU::RLC_r , 2, 8, "RLC" },//0x02
