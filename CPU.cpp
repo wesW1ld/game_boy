@@ -93,7 +93,7 @@ void CPU::step()
 
 void CPU::readInputFile()
 {
-    std::ifstream ifile("input.txt");
+    std::ifstream ifile("input.in");
 
     if(!ifile.is_open()) 
     {

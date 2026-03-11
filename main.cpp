@@ -2,6 +2,7 @@
 #include "MEMORY.hpp"
 #include <iostream>
 #include <bitset>
+#include <fstream>
 
 
 int main()
@@ -11,32 +12,43 @@ int main()
 
     cpu.readInputFile();
 
+    std::ofstream file("output.out");
+    if (!file) 
+    {
+        std::cout << "Error opening file\n";
+        return 1;
+    }
+
     bool loop = true;
+    int loops = 0;
     int option;
 
     while(loop)
     {
         for(int i = 0; i < 8; i++)
         {
-            std::cout << static_cast<int>(cpu.registers[i]) << " ";
+            file << static_cast<int>(cpu.registers[i]) << " ";
         }
-        std::cout << "PC: " << static_cast<int>(cpu.PC()) <<"\n";
-        std::cout << "cycles: " << cpu.cycles <<"\n";
-
-        std::cout << "1: step 0: end\n";
-        std::cin >> option;
-        if(option == 0){loop = false;}
-        else
+        file << "\n";
+        cpu.step();
+        if(cpu.stopped)
         {
-            cpu.step();
+            loop = false;
+        }
+
+        //bail out if I forget stop command (0x10)
+        loops++;
+        if(loops > 500)
+        {
+            loop == false;
         }
     }
 
     for(int i = 0; i < 8; i++)
     {
-        std::cout << static_cast<int>(cpu.registers[i]) << " ";
+        file << static_cast<int>(cpu.registers[i]) << " ";
     }
-    std::cout << "\n";
 
+    file.close();
     return 0;
 }
