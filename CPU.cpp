@@ -91,9 +91,9 @@ void CPU::step()
     }
 }
 
-void CPU::readInputFile()
+void CPU::readInputFile(char * fileName)
 {
-    std::ifstream ifile("input.in");
+    std::ifstream ifile(fileName);
 
     if(!ifile.is_open()) 
     {

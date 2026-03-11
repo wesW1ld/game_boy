@@ -22,7 +22,7 @@ class CPU
         CPU(Memory& mem);
 
         void step();
-        void readInputFile();
+        void readInputFile(char * fileName);
 
         uint16_t PC();
 

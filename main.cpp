@@ -5,14 +5,21 @@
 #include <fstream>
 
 
-int main()
+int main(int argc, char** argv)
 {
+    if(argc != 3)
+    {
+        std::cout << "invalid num of arguements";
+        return 1;
+    }
+
+
     Memory memory;
     CPU cpu = CPU(memory);
 
-    cpu.readInputFile();
+    cpu.readInputFile(argv[1]);
 
-    std::ofstream file("output.out");
+    std::ofstream file(argv[2]);
     if (!file) 
     {
         std::cout << "Error opening file\n";
