@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 {
     if(argc != 3)
     {
-        std::cout << "invalid num of arguements";
+        std::cout << "invalid num of arguements\n";
         return 1;
     }
 
@@ -59,3 +59,4 @@ int main(int argc, char** argv)
     file.close();
     return 0;
 }
+// to compile: g++ CPU.cpp Memory.cpp main.cpp OpcodeTable.hpp -o emulator
