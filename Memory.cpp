@@ -1,4 +1,4 @@
-#include "MEMORY.hpp"
+#include "Memory.hpp"
 
 Memory::Memory()
 {

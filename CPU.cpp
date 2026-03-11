@@ -1,5 +1,5 @@
 #include "CPU.hpp"
-#include "MEMORY.hpp"
+#include "Memory.hpp"
 #include "OpcodeTable.hpp"
 #include <iostream>
 #include <fstream>

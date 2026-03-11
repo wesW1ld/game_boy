@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <array>
 #include <string>
-#include "MEMORY.hpp"
+#include "Memory.hpp"
 
 class CPU
 {
